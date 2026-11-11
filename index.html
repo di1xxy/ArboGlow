@@ -461,7 +461,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
     pin:'<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
   };
   // Logo mark: a leaf veined with the branching tunnels bark beetles leave under bark
-  const MARK = '<svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C8 8 5 15 6 21c1 5 5 9 10 9s9-4 10-9c1-6-2-13-10-19z" fill="var(--green)"/><path d="M16 7v21M16 12l-4-3M16 12l4-3M16 17l-5-3M16 17l5-3M16 22l-4-2.5M16 22l4-2.5" stroke="var(--bark-soft)" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>';
+  const MARK = '<img class="mark" alt="" style="border-radius:8px;object-fit:cover" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABgAGADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5yRanjTNEa5NdBo2lb4ftEg+X+EetRKXKfOVKiirsx1gfGdpx9KeqVvXVuEBJHA7VnJDls4pKdzFVOZXRVWP2p4iPpWhHb+1TLbH0pOaFzGT5JJ4FTXmnXdokb3FvJEsq7kLKRuHqPUVofZypyB0q7ruq6nq8FpDf3DzJZxCGAN/Ag6KPas3UnzLltbqNNDvB/wAPvEPiywub3RraGeO2cJIGnVGyRkYB68Vl+JfCOvaBJs1bS7m0ycKzp8rfRhwfzr1r9nDWEs7/AFLR5GC/a41liB7smcj/AL5Ofwr1fWDb3dtJbXUMc8Egw8cihlYe4NfMYvPcVhMdKlKCcNLdHa3+d+hteKimfFskZBwRg1Xda9V+LPgaLR5DqelK32CRsNGTkwsegz3U9vyrzGVcHpX1GFxMMTTVSGw4TT1RNbAbwTXefbNNgsokSdX2oBhOecVwsYq9bAnqaqpDm1OatTVS1zTu7g3L4UYXsKdbW5Y9Ks6DpV3qd5FaWVvLcTysEjjjQszk9gB1r1jwZ8H9dufGdnoOrQrZs0QubrbIrvbw5/ixkKzdAD656Vzzny6IqFKUrKKPM4NMm2xs0TBZM7GIwGwcHHrg8V654Z+DKrosWteMtdtfDVnMMxJOAZn/AOAkjH05PsK39ZbTtM+LJuU8N3WoaLoKLa21tbp8iCIfeJwQQHLsc9TyTXKfEPUvEPifVTr+o29zFbXGfsm5GEaR54VCRg+5HU5Nckq61u7/ANbm3JCldy1f9amjrXwXtrzSptS8D+I7PxIkAzLbxgLOB7AE5+hwT2zXjd9YvDIyOpBBwQRjFesfDGx8Ywa/Bqfhmyu55oW+ZkQ+Wy90djgYPoT+tdr8RfhfqfibxDPrcsWieGRcgNLDc6gGzJ3f5VwCeM+/Peqp1HJXiv8AL7xul7WHNCNn+B826bc3OlajDfWkhjmhcOjDsRXtnh/xXaa/YiSJljuVX97BnlT6j1Wqd78CfEM0LvpGp6FqzoMmO1vct+oA/WvKdRsdU8O609tdRT2V3bvtdGBR0NYY3BQxaTkrSWzMalGcVaSseta2IdQsLi0lKyRSqY3wc4/+uDXzjrFs1teywsPmRyp/A4r02LXbiCQTI4ZmGWDdG+ted+I5WuNUnndQrSOWIHQZNb5dh5YduPRnLg5SvK5SiHIrTtV5FQaFNa2+qWs99afbLaORWlg3lPNUHldw5GRxkVpTS281/NNa2/2aB5GaOLcW8tSeFyeuBxmvSnsdcj3b9mZI9P0vxd4jt4Ul1PTNLLWgZc7CwcswH/AR+GR3r0T4G+NtJe4j0toNUv8AxBqs5kvbyQKVJAJHO7O1VHp614r8BfFkHhbxbHJqHOmXkZtL5SMjy2/iI9jg/TNejaBHpvw78WeI7+3ube9ktsWekANuDvMA4Jx2RMbj7gd686U3CSlfa9/z/LQ7aFTljFp7b/1+B2Hx58UzTFPBWiCSa5uCDdrCCWIPIiAHUnqR6YHc1yWm+K/HnhrTYrXV7CW603AjWDU7M7CAOFDEA9B05qh8V7Y6B4ztoILiRrqC2immus4klnZmdpCfXJGPQACvYfC2p6f8SfAsljqO0XiqFuAByjj7sqj0PX8xWN51aslzWl0Xp0HeVatJc1pLb/I8r1DxZ4/8S27RaRBdW1jH8vkaVbsqIPQsoz+tR6Hoyan4A8XWup6fjXdOCXccs6Hz1UcspLcgYU8f7VeseJNS034Z+B47PTwr3jgiAEcySH70rew/wFeZ/Bi6m1HXfEaXMjTPe6TOZXc5LsSMk/8AfRqZQtUjCbvJ7+V0KVPlqRhOV29/LQ8Zt7y8sNSSeznkt5o2ykkTFWU+oIrvP2kP9P0LwZr97Giatf6Vm7YKAXxsKsR/wJvzrWX4aafLd+H9Z/tOIeHNQWL7Xcs3/HtJtG+Jj2ywKhj0Jwe2eE+PXiyHxT4ullsRt02zjFrZLjAEa/xY7ZOT9MVrR0Xrb/hzBRdKlJS62t/meavcny9u7DD171h6m4klz+dX7rvWVcfeNelTic8YpO6EgPzCtS1NUNMQSTBa3Ftj5W4Lgj9aKkhyaTszv/gp4Sbxh4vtdNdjHaIDPdyA42Qrjdz2J4UfWrOtTaVD4tvBoRm/suO4b7KJW3NsB4OfQ4474xmul/ZiP2u28X6NaSImq32jMlnlsFiNwIB/4Ev+RXn9xa3djqb213BJBNG214pF2sp7gg15tdJrXzNZQSpRaW57H8eo2n8eQXEYLLd2MEkeBndnI4/KvUvAmj2fw88Czarq+Eu3jEtx6r/ciHvk/mT6V5X4p8QCbwz4I8Tabe2javZW5tJYmKSPG0f3GKHPoSCR3FTunxR+IdpDb3cM5skbzBJNEttFnGNxOBuwPQGs4zUaspxV5dPn1OuEowqymleT2+Z6f4z0uz+I3gGHUtLCm8VDLb887v44j+Ix9QDXl/wVRrK78T30oKLZ6PNu3DGDnoff5TSeV8T/AIeWssFlHOLGRvMMtvEtxCTjG4HBK5GOoFTLqF3a/B3xH4l1F1+3+I7tbZGCBN6j77AAAc/vPyocuaopyVpJa+dluEpKdRTatJLU5b4XeOU0LVpNI1hVudA1L9zfQScqoIx5gHt39R7gVx3xr8KP4Q8YXWmKzSWzATWsh53xN93nuRyD7is20tL3UNTS2s7eS4nlbakUa7mcnsAK7/8AahdbQeFNHupUk1Ow0ZI7wg5IY4wCf+Asfxz3rWgrKy6f1b9TmV50XzdNv8jw+2hgudRt7e6ultIJJFWSdlLCJScFiBycdcCsrWoYLbUri3trpbuGORljnVSokUHAYA8jPXmprp+tZsp5NenBaGSLnhyNrjVLeBGCtI4UE9Bk16PLoVxA5gdAzMMLt6N9K8t0i5a2vYp1PzI4YfUHNfSehtBqOn295EFkilUSJkZwf8Qf5V52Y4iWHal0ZyY2MrxseQ6bqGq+G9bS6tJZ7K8tpNyOpKujf5/OvWbT486jeQIniLw34e1uRRjzri1w5/mPyAq54h8J2fiGxaOVVjulX9zPjlT6H1X2rwzVbS50nUp7G7jMU8LlHU9iK58FjYYtOMXaS3R10q00vd0PpL4f/E5vEPiK30XStG8KeGprjKw3Jsy+X7KMFeT2z3471yvxU8S/ECLWbnRfEmoXQaNuYY/3cLr2YBcBlPYnP514xZXzwSK6OQwOQQcYr2fRvjZa32kwab488M2fiVLdcRXEhCTge5wc/UYz3zXTOm2rN/5fcjoVX2keWcrfkO+Et7461fVl0DQNVvoLeZSLj5i0UMR4ZyDkLx0xgk4xW58QviPouheKLLRtK0mw1jR9BtmtIYrk7onlOA8nHDEY2gnuWPcVzHin4zj+xJtD8F6FaeGLCcYma3OZ5B6FwBj9T714/c3bSMSTShS0sv69BSq+zjywd/P/ACPaL3486jaW7x+HfDfh/Q5HGDNbW2XH06D8wa8a8R61faxqE9/qF1Lc3MzF5JZG3Mx9Saz5p/enWNsbqTLHanc10xjbVmNStKSvN6IzbhmOcCqMhx1r0G2tNNt4Gd7aNwqkkyDNefXrAzNjgZrenPmdrGdCqqrdlsVY3wc16h8I/HcOjSDS9WZjYSNlZAMmFj1OO6nuPxrydGqeOQg5BqcVhoYmm6czqnBSVmfbekC3u7aO5tZo54JBlJI2DKw9iK8j/aW0dLK+0zWY1C/a42hlI7smCD/3ycfhXkfhnxj4g8PSb9I1W5tMnLKj/K31U8H8q1PGfxF8ReLtPtrHWrmCaO2kMkZSBUbcRg5I68V8vhMixWEx0asZJw1v0drf5+YlGKjYh0TStT1W1vLmxtnmisovNuGXpGmcZPtVH7QQcZqhaajd2scsdvcSRJKu2QKxAYeh9ah85vWvqI058z5tun/BM3FGqbj3qJ7j3rP84+tNMh9a0UBcpbabLYzWxZzhEABwBXMmTnrQ11Jt27jj60OFxSpc6szf1rWAbc20LcH7x9a5iV8nJpJJCTyagdqcIcptTpKCsj//2Q==">';
   const logo = () => { const s = h("span", { class:"logo" }); s.append(svgEl(MARK), h("span", {}, "Arbo", h("b", { text:"Glow" }))); return s; };
 
   function allTrees() {
@@ -897,8 +897,8 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
     if (S.auth && !S.uid) dr.append(h("button", { class:"btn primary block", style:"margin-top:12px", onclick:() => { S.drawer = false; S.authModal = true; ui(); } }, AT().login));
     else if (S.dbState === "live" && (S.canWrite === false || S.readOnly) && !S.auth) dr.append(h("p", { class:"notice", text:x.viewOnly }));
     else if (S.dbState === "off") dr.append(h("p", { class:"notice", style:"margin-top:10px", text:x.acctOut }));
-    const demo = h("input", { type:"checkbox", id:"demoToggle", onchange:e => { S.demo = e.target.checked; S.drawer = false; ui(); } }); demo.checked = S.demo;
-    dr.append(h("div", { class:"foot" }, h("label", { class:"switch", for:"demoToggle" }, demo, x.demo), h("span", { text:x.foot }), h("span", { text:x.osm })));
+    S.demo = false;
+    dr.append(h("div", { class:"foot" }, h("span", { text:x.foot }), h("span", { text:x.osm })));
     if (S.dbState === "live" && (!S.auth || S.uid)) {
       const nmShown = myNick() || S.myName;
       const canNick = S.uid && S.canWrite !== false && !S.readOnly;
@@ -946,7 +946,7 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
       if (p.length < 6) { S.authMsg = a.short; ui(); return; }
       S.authBusy = true; S.authMsg = ""; ui();
       try {
-        const r = up ? await S.auth.signUp({ email:e, password:p }) : await S.auth.signInWithPassword({ email:e, password:p });
+        const r = up ? await S.auth.signUp({ email:e, password:p, options:{ emailRedirectTo:location.origin + location.pathname } }) : await S.auth.signInWithPassword({ email:e, password:p });
         if (r.error) { const t = (r.error.message || "").toLowerCase(); S.authMsg = t.includes("already") ? a.exists : t.includes("confirm") ? a.notConf : t.includes("invalid") ? a.bad : a.err; }
         else if (up && !r.data.session) S.authMsg = a.confirm;
         else { S.authModal = false; S.authMsg = ""; S.authPw = ""; }
@@ -1231,6 +1231,26 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
   })();
 })();
 </script>
+
+<div id="instBar" hidden style="position:fixed;left:12px;right:12px;top:calc(70px + env(safe-area-inset-top,0px));z-index:40;background:#174a32;color:#fff;border-radius:16px;padding:12px 14px;font:14px/1.4 Onest,system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;gap:10px;align-items:center">
+<img src="icon-192.png" alt="" style="width:40px;height:40px;border-radius:10px;flex:none"><span id="instTxt" style="flex:1"></span>
+<button id="instBtn" hidden style="border:0;border-radius:10px;padding:8px 12px;background:#b6f23d;color:#123;font-weight:700"></button>
+<button id="instX" aria-label="Закрыть" style="border:0;background:none;color:#fff;font-size:20px;padding:4px 6px">✕</button></div>
+<script>(function(){
+var standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;if(standalone)return;
+try{if(localStorage.getItem('arbo.inst')==='x')return;}catch(e){}
+var L=(function(){try{return localStorage.getItem('arboglow.lang')||'ru'}catch(e){return 'ru'}})();
+var T={ru:{ios:'Добавьте ArboGlow на экран: нажмите «Поделиться» внизу → «На экран "Домой"».',iosOther:'Чтобы добавить на экран, откройте сайт в Safari, потом «Поделиться» → «На экран "Домой"».',and:'Установите ArboGlow на телефон',btn:'Установить'},
+kz:{ios:'ArboGlow-ды экранға қосыңыз: төмендегі «Бөлісу» → «Басты экранға».',iosOther:'Экранға қосу үшін сайтты Safari-де ашыңыз, содан кейін «Бөлісу» → «Басты экранға».',and:'ArboGlow-ды телефонға орнатыңыз',btn:'Орнату'},
+en:{ios:'Add ArboGlow to your Home Screen: tap Share below → “Add to Home Screen”.',iosOther:'To add it to your Home Screen, open this site in Safari, then Share → “Add to Home Screen”.',and:'Install ArboGlow on your phone',btn:'Install'}};
+var t=T[L]||T.ru,bar=document.getElementById('instBar'),txt=document.getElementById('instTxt'),btn=document.getElementById('instBtn');
+document.getElementById('instX').onclick=function(){bar.hidden=true;try{localStorage.setItem('arbo.inst','x')}catch(e){}};
+var ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua);
+if(ios){var safari=/Safari/.test(ua)&&!/CriOS|FxiOS|EdgiOS|GSA|YaBrowser|Instagram|FBAN|FBAV|Line|Telegram/.test(ua);
+setTimeout(function(){txt.textContent=safari?t.ios:t.iosOther;bar.hidden=false;},2500);}
+else{var ev=null;addEventListener('beforeinstallprompt',function(e){e.preventDefault();ev=e;txt.textContent=t.and;btn.textContent=t.btn;btn.hidden=false;bar.hidden=false;});
+btn.onclick=function(){if(!ev)return;ev.prompt();ev.userChoice.finally(function(){bar.hidden=true;ev=null;});};}
+})();</script>
 
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
 </body></html>
