@@ -758,9 +758,11 @@ Decide whether there are visible signs of bark beetles (elm bark beetles, Scolyt
 - galleries: tunnels under the bark (visible where bark has come off: a central gallery with larval tunnels branching from it);
 - bark: bark peeling or falling off in pieces;
 - dieback: dead branches or treetop visible in the photo.
-Do not confuse them with normal bark cracks, lichen, branch scars or mechanical damage. If the photo is not a tree or is unreadable, say so.
+Be strict: decide specifically about BARK BEETLES. Do not confuse them with: normal bark cracks and furrows, lichen or moss, branch scars, woodpecker holes (larger, 1 cm+, often in rows), wood-boring moth/longhorn exit holes (oval, 5 mm+), fungus, sap flow, paint or mechanical damage. If damage comes from another cause, the verdict is NOT infested — name that cause in the explanation.
+Count the tiny round bark-beetle holes you can actually see (estimate if many; 0 if none).
+If the photo is not a tree or is unreadable, say so.
 Answer ONLY with JSON, nothing around it:
-{"isTree": true/false, "signs": {"holes": bool, "frass": bool, "galleries": bool, "bark": bool, "dieback": bool}, "verdict": "infested" | "suspicious" | "healthy" | "unclear", "confidence": "low" | "medium" | "high", "explanation": {"ru": "1–2 short sentences in Russian for a school student: what is visible in the photo", "kk": "the same in Kazakh", "en": "the same in English"}}
+{"isTree": true/false, "holeCount": number, "otherCause": "none" | "woodpecker" | "other_insect" | "cracks" | "lichen_moss" | "fungus" | "mechanical" | "other", "signs": {"holes": bool, "frass": bool, "galleries": bool, "bark": bool, "dieback": bool}, "verdict": "infested" | "suspicious" | "healthy" | "unclear", "confidence": "low" | "medium" | "high", "explanation": {"ru": "1–2 short sentences in Russian for a school student: what is visible in the photo", "kk": "the same in Kazakh", "en": "the same in English"}}
 verdict: infested — clear signs (usually 2+ or clear galleries); suspicious — 1 sign or unclear; healthy — no signs; unclear — the photo is not suitable.`;
   // Our own scanner: Teachable Machine model trained by the team (runs on the phone, no internet needed)
   let tmLoad = null;
@@ -794,11 +796,19 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
     try {
       const r = await S.sample.json(prompt(), { images:[D.blob], modelTier:"default" });
       D.signs = Object.entries(r?.signs || {}).filter(([k, v]) => v === true && SIGN_KEYS.includes(k)).map(([k]) => k);
-      D.ai = { state:"done", verdict:["infested","suspicious","healthy","unclear"].includes(r?.verdict) ? r.verdict : "unclear", confidence:r?.confidence || "low", explanation:(() => { const e = r?.explanation; if (e && typeof e === "object") { const o = {}; for (const k of ["ru", "kk", "en"]) o[k] = String(e[k] || "").slice(0, 400); return o; } return String(e || "").slice(0, 400); })() };
+      D.ai = { state:"done", verdict:["infested","suspicious","healthy","unclear"].includes(r?.verdict) ? r.verdict : "unclear", confidence:r?.confidence || "low", holes:Number.isFinite(+r?.holeCount) ? Math.max(0, Math.round(+r.holeCount)) : null, isTree:r?.isTree !== false, other:typeof r?.otherCause === "string" ? r.otherCause : "none", explanation:(() => { const e = r?.explanation; if (e && typeof e === "object") { const o = {}; for (const k of ["ru", "kk", "en"]) o[k] = String(e[k] || "").slice(0, 400); return o; } return String(e || "").slice(0, 400); })() };
     } catch (e) { const c = e && e.code; D.ai = { state:"error", key:c === "not_granted" ? "aiDenied" : c === "rate_limited" ? "aiBusy" : "aiErr" }; }
     if (S.draft === D) ui();
   }
-  function verdictOf(D) { if (D.tm && D.tm.state === "done" && !D.edited) return tmVerdict(D.tm.p); if (D.ai && D.ai.state === "done" && !D.edited) return D.ai.verdict; const n = D.signs.length; return n >= 2 ? "infested" : n === 1 ? "suspicious" : "healthy"; }
+  function verdictOf(D) {
+    const T = D.tm && D.tm.state === "done" && !D.edited ? tmVerdict(D.tm.p) : null, A = D.ai && D.ai.state === "done" && !D.edited ? D.ai : null;
+    if (A && !A.isTree) return "unclear";
+    if (T && A) { const a = A.verdict, other = A.other && A.other !== "none";
+      if (a === "infested" && T !== "healthy") return "infested";
+      if ((a === "healthy" || other) && T !== "infested") return "healthy";
+      if (a === "unclear") return T;
+      return "suspicious"; }
+    if (T) return T; if (D.ai && D.ai.state === "done" && !D.edited) return D.ai.verdict; const n = D.signs.length; return n >= 2 ? "infested" : n === 1 ? "suspicious" : "healthy"; }
 
   // ================= Data =================
   const writable = () => S.db && !S.readOnly && S.canWrite !== false;
@@ -1045,6 +1055,8 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
       const v = verdictOf(D); const card = { infested:["d", x.vInf], suspicious:["w", x.vSus], healthy:["o", x.vOk], unclear:["w", x.vUnc] }[v];
       const res = h("div", { class:"result " + card[0] }, h("b", { text:card[1] }));
       if (D.tm && D.tm.state === "done" && !D.edited) res.append(h("p", { style:"font-weight:600", text:TM_TXT[lang](Math.round(D.tm.p * 100)) }));
+      if (D.ai && D.ai.state === "done" && !D.edited && D.ai.holes != null) res.append(h("p", { text:({ ru:"Видно дырочек короеда: ", kk:"Қабықжегі тесіктері: ", en:"Bark beetle holes visible: " })[lang] + (D.ai.holes > 30 ? "30+" : D.ai.holes) }));
+      if (D.ai && D.ai.state === "done" && !D.edited && D.ai.other && D.ai.other !== "none") res.append(h("p", { class:"muted", text:({ ru:"Похоже, повреждение не от короеда: ", kk:"Зақым қабықжегіден емес сияқты: ", en:"Damage seems not from bark beetles: " })[lang] + (({ woodpecker:{ ru:"дятел", kk:"тоқылдақ", en:"woodpecker" }, other_insect:{ ru:"другое насекомое", kk:"басқа жәндік", en:"another insect" }, cracks:{ ru:"трещины коры", kk:"қабық жарықтары", en:"bark cracks" }, lichen_moss:{ ru:"лишайник или мох", kk:"қына не мүк", en:"lichen or moss" }, fungus:{ ru:"грибок", kk:"саңырауқұлақ", en:"fungus" }, mechanical:{ ru:"механическое повреждение", kk:"механикалық зақым", en:"mechanical damage" } })[D.ai.other] || { ru:"другая причина", kk:"басқа себеп", en:"another cause" })[lang] }));
       if (D.ai && D.ai.state === "done" && !D.edited) res.append(h("p", { text:txt(D.ai.explanation) }), h("p", { class:"muted", style:"margin-top:6px", text:x.conf(D.ai.confidence) }));
       else if (D.ai && D.ai.state === "error" && !(D.tm && D.tm.state === "done")) res.append(h("p", { class:"muted", text:x[D.ai.key] }));
       else if (D.ai && D.ai.state === "off" && !(D.tm && D.tm.state === "done")) res.append(h("p", { class:"muted", text:x.aiOff }));
