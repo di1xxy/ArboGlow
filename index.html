@@ -1,15 +1,17 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ArboGlow</title>
 <meta name="theme-color" content="#4d7e39">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ArboGlow">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-192.png">
 <style>[hidden]{display:none!important}html,body{margin:0;padding:0}</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>window.ARBO_AI="https://arboglow.ddshaaa228.workers.dev";window.ARBO_SB={url:"https://yrshtetewknrivhrswfv.supabase.co",key:"sb_publishable_Djt2U39Lqwr27i92Igkhcg_hnhL1MsT"};</script>
 </head><body>
 <title>ArboGlow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -817,6 +819,7 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
     const hasPin = S.pick && S.draft && S.draft.lat != null; $("#pickText").textContent = hasPin ? x.pickConfirm : x.pick; $("#pickOk").hidden = !hasPin;
     locModalUI();
     nickModalUI();
+    authModalUI();
     drawerUI();
     const sh = $("#sheet"); sh.hidden = !S.page; sh.textContent = "";
     if (S.page) {
@@ -838,17 +841,19 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
     const item = (key, label, icon, cls) => nav.append(h("button", { class:(cls || "") + (S.page === key ? " on" : ""), onclick:() => go(key) }, svgEl(ICON[icon]), label));
     item(null, x.menuMap, "map"); item("scan", x.menuScan, "scan"); item("about", x.menuAbout, "team");
     dr.append(nav);
-    if (S.dbState === "live" && (S.canWrite === false || S.readOnly)) dr.append(h("p", { class:"notice", text:x.viewOnly }));
+    if (S.auth && !S.uid) dr.append(h("button", { class:"btn primary block", style:"margin-top:12px", onclick:() => { S.drawer = false; S.authModal = true; ui(); } }, AT().login));
+    else if (S.dbState === "live" && (S.canWrite === false || S.readOnly) && !S.auth) dr.append(h("p", { class:"notice", text:x.viewOnly }));
     else if (S.dbState === "off") dr.append(h("p", { class:"notice", style:"margin-top:10px", text:x.acctOut }));
     const demo = h("input", { type:"checkbox", id:"demoToggle", onchange:e => { S.demo = e.target.checked; S.drawer = false; ui(); } }); demo.checked = S.demo;
     dr.append(h("div", { class:"foot" }, h("label", { class:"switch", for:"demoToggle" }, demo, x.demo), h("span", { text:x.foot }), h("span", { text:x.osm })));
-    if (S.dbState === "live") {
+    if (S.dbState === "live" && (!S.auth || S.uid)) {
       const nmShown = myNick() || S.myName;
       const canNick = S.uid && S.canWrite !== false && !S.readOnly;
       const acct = h(canNick ? "button" : "div", { class:"acct", onclick:canNick ? () => { S.drawer = false; S.nickModal = true; ui(); } : null });
       acct.append(h("span", { class:"av", text:(nmShown || "?").trim().charAt(0).toUpperCase() }));
       acct.append(h("span", {}, nmShown || x.acctAnon, canNick ? h("small", { text:x.nickEdit }) : ""));
       dr.append(acct);
+      if (S.auth) dr.append(h("button", { class:"btn block", style:"margin-top:8px", onclick:async () => { try { await S.auth.signOut(); } catch (e) {} S.drawer = false; ui(); } }, AT().logout));
     }
   }
 
@@ -868,6 +873,74 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
     if (D.locState === "none" || D.locState === "far") card.append(h("p", { class:"notice", text:D.locState === "far" ? x.locFarTxt : x.locFail }));
     card.append(h("button", { class:"cancel", onclick:() => { S.locModal = false; ui(); } }, x.cancel));
     m.append(card);
+  }
+  // ===== Sign in (GitHub version: Supabase accounts with email + password) =====
+  const AT_TXT = {
+    ru:{ login:"Войти / Регистрация", logout:"Выйти из аккаунта", title:"Вход в ArboGlow", sub:"Войдите, чтобы отмечать деревья на общей карте.", email:"Почта", pass:"Пароль (минимум 6 символов)", signin:"Войти", signup:"Создать аккаунт", toUp:"Нет аккаунта? Зарегистрироваться", toIn:"Уже есть аккаунт? Войти", bad:"Неверная почта или пароль.", exists:"Такой аккаунт уже есть — войдите.", short:"Пароль слишком короткий.", err:"Не получилось. Проверьте интернет и попробуйте ещё раз.", needLogin:"Чтобы добавить дерево на общую карту, войдите в аккаунт.", confirm:"Проверьте почту и подтвердите адрес, потом войдите." },
+    kz:{ login:"Кіру / Тіркелу", logout:"Аккаунттан шығу", title:"ArboGlow-ға кіру", sub:"Ортақ картада ағаштарды белгілеу үшін кіріңіз.", email:"Пошта", pass:"Құпиясөз (кемінде 6 таңба)", signin:"Кіру", signup:"Аккаунт ашу", toUp:"Аккаунт жоқ па? Тіркелу", toIn:"Аккаунт бар ма? Кіру", bad:"Пошта немесе құпиясөз қате.", exists:"Мұндай аккаунт бар — кіріңіз.", short:"Құпиясөз тым қысқа.", err:"Болмады. Интернетті тексеріп, қайталап көріңіз.", needLogin:"Ағашты ортақ картаға қосу үшін аккаунтқа кіріңіз.", confirm:"Поштаны тексеріп, мекенжайды растаңыз, содан кейін кіріңіз." },
+    en:{ login:"Sign in / Sign up", logout:"Sign out", title:"Sign in to ArboGlow", sub:"Sign in to mark trees on the shared map.", email:"Email", pass:"Password (at least 6 characters)", signin:"Sign in", signup:"Create account", toUp:"No account? Sign up", toIn:"Have an account? Sign in", bad:"Wrong email or password.", exists:"This account already exists — sign in.", short:"Password is too short.", err:"Something went wrong. Check your connection and try again.", needLogin:"Sign in to add a tree to the shared map.", confirm:"Check your email to confirm your address, then sign in." } };
+  const AT = () => AT_TXT[lang] || AT_TXT.ru;
+  function authModalUI() {
+    let m = $("#authModal"); if (!m) { m = h("div", { class:"modalwrap", id:"authModal" }); $(".app").append(m); }
+    const a = AT(); m.hidden = !S.authModal; m.textContent = ""; if (m.hidden) return;
+    const up = S.authMode === "up";
+    const em = h("input", { class:"nick", type:"email", autocomplete:"email", placeholder:a.email, "aria-label":a.email });
+    const pw = h("input", { class:"nick", type:"password", autocomplete:up ? "new-password" : "current-password", placeholder:a.pass, "aria-label":a.pass });
+    em.value = S.authEmail || ""; pw.value = S.authPw || "";
+    em.oninput = () => { S.authEmail = em.value; }; pw.oninput = () => { S.authPw = pw.value; };
+    const go2 = async () => {
+      const e = em.value.trim(), p = pw.value; S.authEmail = e;
+      if (p.length < 6) { S.authMsg = a.short; ui(); return; }
+      S.authBusy = true; S.authMsg = ""; ui();
+      try {
+        const r = up ? await S.auth.signUp({ email:e, password:p }) : await S.auth.signInWithPassword({ email:e, password:p });
+        if (r.error) { const t = (r.error.message || "").toLowerCase(); S.authMsg = t.includes("already") ? a.exists : t.includes("invalid") ? a.bad : a.err; }
+        else if (up && !r.data.session) S.authMsg = a.confirm;
+        else { S.authModal = false; S.authMsg = ""; S.authPw = ""; }
+      } catch (err) { S.authMsg = a.err; }
+      S.authBusy = false; ui();
+    };
+    const card = h("form", { class:"modal", role:"dialog", "aria-modal":"true", "aria-label":a.title, onsubmit:ev => { ev.preventDefault(); go2(); } },
+      h("h2", { text:a.title }), h("p", { class:"sub", text:a.sub }), em, pw,
+      h("button", { class:"btn primary block", type:"submit", disabled:!!S.authBusy }, S.authBusy ? h("span", { class:"spin" }) : (up ? a.signup : a.signin)));
+    if (S.authMsg) card.append(h("p", { class:"notice", text:S.authMsg }));
+    card.append(h("button", { class:"cancel", type:"button", onclick:() => { S.authMode = up ? "in" : "up"; S.authMsg = ""; S.authEmail = em.value; ui(); } }, up ? a.toIn : a.toUp));
+    card.append(h("button", { class:"cancel", type:"button", onclick:() => { S.authModal = false; S.authMsg = ""; S.authPw = ""; ui(); } }, tr().cancel));
+    m.append(card);
+  }
+  // Supabase-backed stand-in for the db calls this app makes (collection/doc/set/get/update/delete/onSnapshot)
+  function supaDb(sb) {
+    const listeners = new Map();
+    const wrapErr = e => { const c = String(e && (e.code || e.status) || ""); const o = new Error(e && e.message || "db"); o.code = (c === "42501" || c === "401" || c === "403" || c === "PGRST301") ? "invalid_argument" : "db"; return o; };
+    const toDoc = (table, r) => ({ id:r.id, data:() => table === "users" ? { name:r.name } : table === "photos" ? { data:r.data } : { ...r.data, createdBy:r.data.createdBy || r.created_by } });
+    async function load(table) {
+      const L = listeners.get(table); if (!L) return;
+      const { data, error } = await sb.from(table).select(table === "photos" ? "id" : "*").limit(L.limit || 1000);
+      if (error) { L.errs.forEach(f => f(error)); return; }
+      const snap = { docs:data.map(r => toDoc(table, r)) }; L.cbs.forEach(f => f(snap));
+    }
+    const refresh = t => load(t).catch(() => {});
+    const ref = (table, id) => ({ id,
+      async set(o) {
+        const row = table === "photos" ? { id, data:o.data } : table === "users" ? { id, name:o.name, updated_at:new Date().toISOString() } : { id, data:o, created_by:S.uid };
+        const { error } = await sb.from(table).upsert(row); if (error) throw wrapErr(error); refresh(table);
+      },
+      async update(p) {
+        const { data:cur, error:e1 } = await sb.from(table).select("data").eq("id", id).single(); if (e1) throw wrapErr(e1);
+        const { error } = await sb.from(table).update({ data:{ ...cur.data, ...p } }).eq("id", id); if (error) throw wrapErr(error); refresh(table);
+      },
+      async get() { const { data, error } = await sb.from(table).select("*").eq("id", id).maybeSingle(); if (error) throw wrapErr(error); return { exists:!!data, data:() => data ? toDoc(table, data).data() : null }; },
+      async delete() { const { error } = await sb.from(table).delete().eq("id", id); if (error) throw wrapErr(error); refresh(table); } });
+    const coll = table => ({
+      doc:id => ref(table, id || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2))),
+      limit:n => ({ onSnapshot:(cb, err) => {
+        if (!listeners.has(table)) {
+          listeners.set(table, { cbs:[], errs:[], limit:n });
+          try { sb.channel("rt-" + table).on("postgres_changes", { event:"*", schema:"public", table }, () => refresh(table)).subscribe(); } catch (e) {}
+          setInterval(() => refresh(table), 30000);
+        }
+        const L = listeners.get(table); L.cbs.push(cb); if (err) L.errs.push(err); refresh(table); } }) });
+    return { collection:coll, doc:path => { const [t, id] = path.split("/"); return ref(t, id); } };
   }
   // Choose a display name for this app (stored in the shared "users" collection, one doc per account)
   const myNick = () => S.nicks.get(S.uid) || "";
@@ -933,7 +1006,8 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
     const canSave = !running && !S.busy && (writable() || !S.db);
     body.append(h("button", { class:"btn " + (weak ? "" : "primary") + " block", style:"padding:14px", disabled:!canSave, onclick:() => { D.locState = "idle"; S.locModal = true; ui(); } }, S.busy ? x.saving : weak ? x.addAnyway : x.add));
     if (v === "healthy" && !running) body.append(h("p", { class:"muted", text:x.healthyHint }));
-    if (S.db && !writable()) body.append(h("p", { class:"notice", text:x.viewOnly }));
+    if (S.auth && !S.uid) body.append(h("div", { class:"notice", style:"display:flex;flex-direction:column;gap:8px" }, h("span", { text:AT().needLogin }), h("button", { class:"btn primary", onclick:() => { S.authModal = true; ui(); } }, AT().login)));
+    else if (S.db && !writable()) body.append(h("p", { class:"notice", text:x.viewOnly }));
     if (S.dbState === "off") body.append(h("p", { class:"notice", text:x.offline }));
     if (S.msg) body.append(h("p", { class:"notice", text:S.msg }));
   }
@@ -1057,6 +1131,30 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
 
   (async () => {
     const CL = window.claude;
+    if ((!CL || !CL.use) && window.supabase && window.ARBO_SB) {
+      const sb = window.supabase.createClient(window.ARBO_SB.url, window.ARBO_SB.key);
+      S.auth = sb.auth; const db = supaDb(sb);
+      if (window.ARBO_AI) { S.sampleImages = true; S.sample = { json:async (pr, o) => {
+        const img = await createImageBitmap(o.images[0]); const k = Math.min(1, 1024 / Math.max(img.width, img.height));
+        const c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        const r = await fetch(window.ARBO_AI, { method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ prompt:pr, image:c.toDataURL("image/jpeg", .85) }) });
+        if (!r.ok) { const e = new Error("ai"); e.code = r.status === 429 ? "rate_limited" : "ai"; throw e; }
+        return r.json(); } }; }
+      const setSession = ses => { const u = ses && ses.user; S.uid = u ? u.id : null; S.myName = u ? (u.email || "").split("@")[0] : ""; S.canWrite = !!u; S.readOnly = false; ui(); if (u) maybeAskNick(); };
+      try { const { data } = await sb.auth.getSession(); setSession(data.session); } catch (e) {}
+      sb.auth.onAuthStateChange((_e, ses) => setSession(ses));
+      S.db = db; S.dbState = "live"; ui();
+      db.collection("users").limit(1000).onSnapshot(snap => {
+        const m = new Map(); for (const d of snap.docs) { const n = d.data() && d.data().name; if (n) m.set(d.id, String(n).slice(0, 30)); }
+        S.nicks = m; S.nicksLoaded = true; ui(); maybeAskNick();
+      }, () => {});
+      db.collection("trees").limit(1000).onSnapshot(snap => {
+        const m = new Map(); for (const d of snap.docs) m.set(d.id, d.data());
+        S.trees = m; S.loaded = true;
+        if (S.page === "scan") { draw(); const n = infested(allTrees()).length; const c = $("#count"); if (c) c.textContent = n ? ` · ${n}` : ""; } else ui();
+      }, () => toast(tr().connLost));
+      return;
+    }
     if (!CL || !CL.use) { S.dbState = "off"; ui(); return; }
     let db = null, user = null, sample = null;
     try { [db, user, sample] = await Promise.all([CL.use("db"), CL.use("user"), CL.use("sample")]); } catch (e) {}
