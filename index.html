@@ -23,7 +23,7 @@
 :root{
   --bg:#eef4e6; --surface:#fbfdf8; --surface-2:#e6efdc; --ink:#2a2a1e; --muted:#676a52; --line:#d4dfc7;
   --green:#4d7e39; --green-ink:#ffffff; --green-soft:#dcebcc; --bark:#7a5433; --bark-soft:#f1e7da;
-  --infested:#d43b2b; --risk:#f08a24; --felled:#2f74c9;
+  --infested:#d43b2b; --risk:#f08a24; --felled:#2f74c9; --trap:#f2c200;
   --land:#edf3e4; --park:#b5e09a; --wood:#a2d385; --park-edge:#86c160; --walk:#fbf7ea; --pitch:#9fd182; --play:#f4e3a2; --water:#a4cfdc; --road:#ffffff; --road-case:#d3dbc6; --road-major:#ecd3a2; --road-major-case:#c7a36b; --label:#4a4934; --halo:#fbfdf8; --bld:#dfd9cc; --bld-edge:#cdc6b6;
   --display:"Onest", system-ui, sans-serif; --brand:"Montserrat Alternates", "Onest", system-ui, sans-serif;
   --body:"Onest", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -466,10 +466,50 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
 
   function allTrees() {
     const out = [];
-    for (const [id, t] of S.trees) out.push({ ...t, status:t.status === "removed" ? "felled" : t.status, id });
+    for (const [id, t] of S.trees) if (t.kind !== "trap") out.push({ ...t, status:t.status === "removed" ? "felled" : t.status, id });
     for (const [id, t] of S.local) out.push({ ...t, id, local:true });
     if (S.demo) out.push(...DEMO);
     return out.filter(t => Number.isFinite(t.lat) && Number.isFinite(t.lng));
+  }
+  function allTraps() { const out = []; for (const [id, t] of S.trees) if (t.kind === "trap" && Number.isFinite(t.lat) && Number.isFinite(t.lng)) out.push({ ...t, id }); return out; }
+  const TT_TXT = {
+    ru:{ menu:"Поставить ловушку", title:"Ловушка", lead:"Отметьте место, где вы поставили ловушку для короедов.", note:"Заметка (необязательно)", notePh:"Например: висит на карагаче у входа в парк", my:"Моё местоположение", mySub:"Ловушка стоит рядом со мной", map:"Выбрать на карте", mapSub:"Нажмите на карту, где стоит ловушка", pick:"Нажмите на карту, где стоит ловушка", saved:"Ловушка отмечена на карте", lg:"Ловушка", pill:"Ловушка", del:"Убрать ловушку с карты", delErr:"Не получилось удалить", saveErr:"Не получилось сохранить ловушку", need:"Чтобы поставить ловушку, войдите в аккаунт.", far:"Вы далеко от Астаны — выберите место на карте.", finding:"Ищем вас…" },
+    kz:{ menu:"Аулағыш қою", title:"Аулағыш", lead:"Қабықжегіге аулағыш қойған жерді белгілеңіз.", note:"Ескертпе (міндетті емес)", notePh:"Мысалы: саябақ кіреберісіндегі қарағашта", my:"Менің орным", mySub:"Аулағыш қасымда тұр", map:"Картадан таңдау", mapSub:"Аулағыш тұрған жерді картадан басыңыз", pick:"Аулағыш тұрған жерді картадан басыңыз", saved:"Аулағыш картада белгіленді", lg:"Аулағыш", pill:"Аулағыш", del:"Аулағышты картадан алып тастау", delErr:"Жою мүмкін болмады", saveErr:"Аулағышты сақтау мүмкін болмады", need:"Аулағыш қою үшін аккаунтқа кіріңіз.", far:"Сіз Астанадан алыссыз — орынды картадан таңдаңыз.", finding:"Іздеп жатырмыз…" },
+    en:{ menu:"Place a trap", title:"Trap", lead:"Mark the place where you set up a bark beetle trap.", note:"Note (optional)", notePh:"E.g. hanging on an elm at the park entrance", my:"My location", mySub:"The trap is next to me", map:"Pick on the map", mapSub:"Tap the map where the trap is", pick:"Tap the map where the trap is", saved:"Trap marked on the map", lg:"Trap", pill:"Trap", del:"Remove trap from the map", delErr:"Couldn't delete", saveErr:"Couldn't save the trap", need:"Sign in to place a trap.", far:"You're far from Astana — pick the place on the map.", finding:"Finding you…" } };
+  const TT = () => TT_TXT[lang] || TT_TXT.ru;
+  async function saveTrap() {
+    const D = S.trapDraft; if (!D || D.lat == null) return;
+    const trap = { kind:"trap", lat:D.lat, lng:D.lng, note:(D.note || "").trim().slice(0, 300), createdAt:new Date().toISOString(), createdBy:S.uid || null };
+    S.busy = true; ui(); let id;
+    try { if (S.db) { const ref = S.db.collection("trees").doc(); await ref.set(trap); id = ref.id; S.trees.set(id, trap); } else { id = "localtrap" + Date.now(); S.trees.set(id, trap); } }
+    catch (e) { S.busy = false; S.msg = TT().saveErr; S.page = "trap"; S.pick = false; ui(); return; }
+    S.busy = false; S.trapDraft = null; S.pickTrap = false; S.pick = false; S.page = "trapv"; S.selected = id; flyTo(trap.lat, trap.lng, .5); toast(TT().saved); ui();
+  }
+  function trapPage(body) {
+    const a = TT(); if (!S.trapDraft) S.trapDraft = { lat:null, lng:null, note:"", finding:false };
+    const D = S.trapDraft;
+    body.append(h("p", { class:"lead", text:a.lead }));
+    if (S.auth && !S.uid) { body.append(h("div", { class:"notice", style:"display:flex;flex-direction:column;gap:8px" }, h("span", { text:a.need }), h("button", { class:"btn primary", onclick:() => { S.authModal = true; ui(); } }, AT().login))); return; }
+    const note = h("textarea", { id:"trapNote", placeholder:a.notePh, oninput:e => { D.note = e.target.value.slice(0, 300); } }); note.value = D.note;
+    body.append(h("div", { class:"field" }, h("label", { for:"trapNote", text:a.note }), note));
+    const opt = (cls, icon, title, sub, onclick) => h("button", { class:"opt", disabled:D.finding || S.busy, onclick }, h("span", { class:"ic", style:cls }, svgEl(ICON[icon])), h("span", {}, h("b", { text:title }), h("span", { class:"s", text:sub })));
+    body.append(opt("background:var(--trap);color:#3a2f00", "gps", a.my, D.finding ? a.finding : a.mySub, () => {
+      D.finding = true; S.msg = ""; ui();
+      locate().then(p => { D.finding = false; if (S.trapDraft !== D) return; if (p && inCity(p.lat, p.lng)) { D.lat = +p.lat.toFixed(6); D.lng = +p.lng.toFixed(6); S.me = p; saveTrap(); } else { S.msg = a.far; ui(); } }); }));
+    body.append(opt("background:var(--bark);color:var(--surface)", "pin", a.map, a.mapSub, () => { S.pickTrap = true; S.pick = true; S.page = null; D.lat = null; D.lng = null; ui(); }));
+    if (S.msg) body.append(h("p", { class:"notice", text:S.msg }));
+  }
+  function trapViewPage(body) {
+    const a = TT(), x = tr(), t = allTraps().find(q => q.id === S.selected);
+    if (!t) { body.append(h("p", { class:"muted", text:x.gone })); return; }
+    body.append(h("div", { class:"row", style:"align-items:center;justify-content:space-between" }, h("span", { style:"font-weight:600;font-size:16px", text:a.title }), h("span", { class:"pill", style:"background:var(--trap);color:#3a2f00", text:a.pill })));
+    const by = t.createdBy && t.createdBy === S.uid ? x.dYou : (S.nicks.get(t.createdBy) || S.names.get(t.createdBy) || x.dSomeone);
+    const dl = h("dl", {}, h("dt", { text:x.dAdded }), h("dd", { text:dateL(t.createdAt) }), h("dt", { text:x.dBy }), h("dd", { text:by }));
+    if (t.note) dl.append(h("dt", { text:a.note.replace(/ \(.*\)/, "") }), h("dd", { text:t.note }));
+    body.append(dl);
+    if (t.createdBy && t.createdBy === S.uid) body.append(h("button", { class:"btn danger block", onclick:async () => {
+      try { if (S.db && !String(t.id).startsWith("localtrap")) await S.db.doc("trees/" + t.id).delete(); S.trees.delete(t.id); S.selected = null; S.page = null; ui(); } catch (e) { S.msg = a.delErr; ui(); } } }, a.del));
+    if (S.msg) body.append(h("p", { class:"notice", text:S.msg }));
   }
   const DONE = st => st === "felled" || st === "treated";
   const infested = ts => ts.filter(t => !DONE(t.status));
@@ -477,7 +517,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
   // ================= Canvas map =================
   const cv = $("#map"), ctx = cv.getContext("2d");
   let C = {}, dpr = 1, W = 0, H = 0, raf = 0;
-  function readColors() { const cs = getComputedStyle(document.documentElement); for (const k of ["land","park","wood","park-edge","walk","pitch","play","water","road","road-case","road-major","road-major-case","label","halo","infested","risk","felled","treated","bld","bld-edge","green","bark","surface","ink"]) C[k] = cs.getPropertyValue("--" + k).trim(); }
+  function readColors() { const cs = getComputedStyle(document.documentElement); for (const k of ["land","park","wood","park-edge","walk","pitch","play","water","road","road-case","road-major","road-major-case","label","halo","infested","risk","felled","treated","trap","bld","bld-edge","green","bark","surface","ink"]) C[k] = cs.getPropertyValue("--" + k).trim(); }
   function resize() { dpr = Math.min(2.5, window.devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); draw(); }
   const toScreen = (x, y) => { const v = S.view, c = Math.cos(v.rot), sn = Math.sin(v.rot), ux = (x - v.cx) * v.s, uy = (y - v.cy) * v.s; return [W / 2 + ux * c - uy * sn, H / 2 + ux * sn + uy * c]; };
   const toWorld = (sx, sy) => { const v = S.view, c = Math.cos(v.rot), sn = Math.sin(v.rot), dx = sx - W / 2, dy = sy - H / 2; return [(dx * c + dy * sn) / v.s + v.cx, (-dx * sn + dy * c) / v.s + v.cy]; };
@@ -548,6 +588,16 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
       ctx.beginPath(); ctx.arc(x, y, 8.5, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill(); ctx.strokeStyle = C.surface; ctx.lineWidth = 2.5; ctx.stroke();
       if (DONE(t.status)) { ctx.strokeStyle = C.surface; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.arc(x, y, 3.2, 0, Math.PI * 2); ctx.stroke(); }
     }
+    for (const t of allTraps()) {
+      const [x, y] = toScreen(wx(t.lng), wy(t.lat)); if (x < -20 || y < -20 || x > W + 20 || y > H + 20) continue;
+      if (S.selected === t.id) { ctx.beginPath(); ctx.arc(x, y, 15, 0, Math.PI * 2); ctx.strokeStyle = C.bark; ctx.lineWidth = 3; ctx.stroke(); }
+      ctx.beginPath(); ctx.moveTo(x, y - 11); ctx.lineTo(x + 11, y); ctx.lineTo(x, y + 11); ctx.lineTo(x - 11, y); ctx.closePath();
+      ctx.fillStyle = C.trap; ctx.fill(); ctx.strokeStyle = "#5a4600"; ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fillStyle = "#5a4600"; ctx.fill();
+    }
+    if (S.pickTrap && S.trapDraft && S.trapDraft.lat != null) { const [x, y] = toScreen(wx(S.trapDraft.lng), wy(S.trapDraft.lat));
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.bezierCurveTo(x - 12, y - 16, x - 11, y - 32, x, y - 32); ctx.bezierCurveTo(x + 11, y - 32, x + 12, y - 16, x, y);
+      ctx.fillStyle = C.trap; ctx.fill(); ctx.strokeStyle = "#5a4600"; ctx.lineWidth = 1.5; ctx.stroke(); ctx.beginPath(); ctx.arc(x, y - 21, 4, 0, Math.PI * 2); ctx.fillStyle = "#5a4600"; ctx.fill(); }
     if (S.me) { const [x, y] = toScreen(wx(S.me.lng), wy(S.me.lat)); ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fillStyle = "#2f7de1"; ctx.fill(); ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.stroke(); }
     if (S.draft && S.draft.lat != null) { const [x, y] = toScreen(wx(S.draft.lng), wy(S.draft.lat));
       ctx.beginPath(); ctx.moveTo(x, y); ctx.bezierCurveTo(x - 12, y - 16, x - 11, y - 32, x, y - 32); ctx.bezierCurveTo(x + 11, y - 32, x + 12, y - 16, x, y);
@@ -575,7 +625,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
     // schools, universities and shopping centres: small plain labels, long names wrap onto up to 3 lines (tap shows the full name)
     S.poiHits = [];
     if (PARKS && s > .3) {
-      const PC = { play:["#e0a400","◆"], mon:["#8a5a2b","★"], wc:["#2f74c9","WC"], view:["#4d7e39","◉"], dog:["#7a5433","●"], water:["#2f9cc9","≈"] };
+      const PC = { play:["#c8549a","◆"], mon:["#8a5a2b","★"], wc:["#2f74c9","WC"], view:["#4d7e39","◉"], dog:["#7a5433","●"], water:["#2f9cc9","≈"] };
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
       for (const [px, py, pk, pn] of PARKS.pois) {
         const [x, y] = toScreen(px, py); if (x < -60 || y < -20 || x > W + 60 || y > H + 20) continue;
@@ -667,6 +717,8 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
   cv.addEventListener("wheel", e => { e.preventDefault(); const [sx, sy] = rel(e.clientX, e.clientY); zoomAt(e.deltaY > 0 ? 1 / 1.2 : 1.2, sx, sy); }, { passive:false });
   cv.addEventListener("dblclick", e => { const [sx, sy] = rel(e.clientX, e.clientY); zoomAt(1.8, sx, sy); });
   function onTap(sx, sy) {
+    if (S.pick && S.pickTrap) { const [x, y] = toWorld(sx, sy); const ll = toLL(x, y); S.trapDraft.lat = +ll.lat.toFixed(6); S.trapDraft.lng = +ll.lng.toFixed(6); ui(); return; }
+    for (const t of allTraps()) { const [x, y] = toScreen(wx(t.lng), wy(t.lat)); if (Math.hypot(x - sx, y - sy) < 16) { S.selected = t.id; S.page = "trapv"; S.msg = ""; S.drawer = false; flyTo(t.lat, t.lng); ui(); return; } }
     if (S.pick) { const [x, y] = toWorld(sx, sy); const ll = toLL(x, y); S.draft.lat = +ll.lat.toFixed(6); S.draft.lng = +ll.lng.toFixed(6); S.draft.locSource = "map"; ui(); return; }
     let best = null, bd = 18;
     for (const t of allTrees()) { const [x, y] = toScreen(wx(t.lng), wy(t.lat)); const d = Math.hypot(x - sx, y - sy); if (d < bd) { bd = d; best = t; } }
@@ -802,7 +854,8 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
     $("#legend").replaceChildren(
       h("span", {}, h("i", { style:"background:var(--infested)" }), x.lgInf, h("b", { id:"count", style:"color:var(--infested)" })),
       h("span", {}, h("i", { style:"background:var(--risk)" }), x.lgRisk),
-      h("span", {}, h("i", { style:"background:var(--felled)" }), x.lgFel));
+      h("span", {}, h("i", { style:"background:var(--felled)" }), x.lgFel),
+      h("span", {}, h("i", { style:"background:var(--trap);border-radius:2px;transform:rotate(45deg) scale(.85)" }), TT().lg));
     $("#fab").replaceChildren(svgEl(ICON.scan), x.fab);
     $("#attrib").replaceChildren(h("b", { text:"i" }), h("span", { text:x.attrib })); $("#attrib").setAttribute("aria-label", x.attrib); $("#attrib").onclick = e => e.currentTarget.classList.toggle("open"); $("#pickCancel").textContent = x.cancel; $("#pickOk").textContent = x.save;
     const lab = { menuBtn:x.menu, zin:x.zin, zout:x.zout, northBtn:x.north, rotL:x.rotL, rotR:x.rotR, locBtn:x.loc };
@@ -816,17 +869,17 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
     const langBtns = () => [["ru", "РУ"], ["kz", "ҚЗ"], ["en", "EN"]].map(([k, l]) => h("button", { class:lang === k ? "on" : "", "aria-pressed":String(lang === k), title:{ ru:"Русский", kz:"Қазақша", en:"English" }[k], onclick:() => setLang(k) }, l));
     const tl = $("#toplang"); tl.setAttribute("aria-label", x.lang); tl.replaceChildren(...langBtns());
     cv.classList.toggle("picking", S.pick); $("#pickbar").hidden = !S.pick; $("#fab").hidden = !!S.page || S.pick; $("#legend").hidden = S.pick;
-    const hasPin = S.pick && S.draft && S.draft.lat != null; $("#pickText").textContent = hasPin ? x.pickConfirm : x.pick; $("#pickOk").hidden = !hasPin;
+    const hasPin = S.pick && (S.pickTrap ? S.trapDraft && S.trapDraft.lat != null : S.draft && S.draft.lat != null); $("#pickText").textContent = S.pickTrap && !hasPin ? TT().pick : hasPin ? x.pickConfirm : x.pick; $("#pickOk").hidden = !hasPin;
     locModalUI();
     nickModalUI();
     authModalUI();
     drawerUI();
     const sh = $("#sheet"); sh.hidden = !S.page; sh.textContent = "";
     if (S.page) {
-      const titles = { scan:x.sheetScan, about:x.sheetAbout, tree:x.sheetTree, zone:x.sheetZone };
+      const titles = { scan:x.sheetScan, about:x.sheetAbout, tree:x.sheetTree, zone:x.sheetZone, trap:TT().menu, trapv:TT().title };
       const body = h("div", { class:"body" });
       sh.append(h("header", {}, h("div", { class:"hgroup" }, h("button", { class:"iconbtn", "aria-label":x.menu, title:x.menu, onclick:() => { S.drawer = true; ui(); } }, svgEl('<svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h11M4 17h16"/></svg>')), h("h2", { text:titles[S.page] || "" })), h("div", { class:"hgroup" }, h("div", { class:"toplang", role:"group", "aria-label":x.lang }, ...langBtns()), h("button", { class:"iconbtn", "aria-label":x.close, title:x.close, onclick:() => go(null) }, svgEl(ICON.close)))), body);
-      if (S.page === "scan") scanPage(body); else if (S.page === "about") aboutPage(body); else if (S.page === "tree") treePage(body); else if (S.page === "zone") zonePage(body);
+      if (S.page === "scan") scanPage(body); else if (S.page === "about") aboutPage(body); else if (S.page === "tree") treePage(body); else if (S.page === "zone") zonePage(body); else if (S.page === "trap") trapPage(body); else if (S.page === "trapv") trapViewPage(body);
     }
     draw();
   }
@@ -839,7 +892,7 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
       h("p", { class:"tag", text:x.tag }));
     const nav = h("div", { class:"nav" });
     const item = (key, label, icon, cls) => nav.append(h("button", { class:(cls || "") + (S.page === key ? " on" : ""), onclick:() => go(key) }, svgEl(ICON[icon]), label));
-    item(null, x.menuMap, "map"); item("scan", x.menuScan, "scan"); item("about", x.menuAbout, "team");
+    item(null, x.menuMap, "map"); item("scan", x.menuScan, "scan"); item("trap", TT().menu, "pin"); item("about", x.menuAbout, "team");
     dr.append(nav);
     if (S.auth && !S.uid) dr.append(h("button", { class:"btn primary block", style:"margin-top:12px", onclick:() => { S.drawer = false; S.authModal = true; ui(); } }, AT().login));
     else if (S.dbState === "live" && (S.canWrite === false || S.readOnly) && !S.auth) dr.append(h("p", { class:"notice", text:x.viewOnly }));
@@ -858,7 +911,7 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
   }
 
   function setLang(k) { lang = k; try { localStorage.setItem("arboglow.lang", k); } catch (e) {} staticTexts(); ui(); draw(); }
-  function go(page) { S.drawer = false; S.pick = false; S.msg = ""; S.confirmDelete = false; if (page === "scan" && !S.draft) startScan(); if (page !== "tree" && page !== "zone") S.selected = null; S.page = page; ui(); }
+  function go(page) { S.drawer = false; S.pick = false; S.pickTrap = false; if (page === "trap") S.trapDraft = null; S.msg = ""; S.confirmDelete = false; if (page === "scan" && !S.draft) startScan(); if (page !== "tree" && page !== "zone" && page !== "trapv") S.selected = null; S.page = page; ui(); }
   function startScan() { S.draft = { blob:null, data:null, signs:[], ai:null, edited:false, sp:0, note:"", lat:null, lng:null, locSource:null, locState:"idle" }; }
   // "Where is the tree?" dialog shown after the scan
   function locModalUI() {
@@ -876,9 +929,9 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
   }
   // ===== Sign in (GitHub version: Supabase accounts with email + password) =====
   const AT_TXT = {
-    ru:{ login:"Войти / Регистрация", logout:"Выйти из аккаунта", title:"Вход в ArboGlow", sub:"Войдите, чтобы отмечать деревья на общей карте.", email:"Почта", pass:"Пароль (минимум 6 символов)", signin:"Войти", signup:"Создать аккаунт", toUp:"Нет аккаунта? Зарегистрироваться", toIn:"Уже есть аккаунт? Войти", bad:"Неверная почта или пароль.", exists:"Такой аккаунт уже есть — войдите.", short:"Пароль слишком короткий.", err:"Не получилось. Проверьте интернет и попробуйте ещё раз.", needLogin:"Чтобы добавить дерево на общую карту, войдите в аккаунт.", confirm:"Проверьте почту и подтвердите адрес, потом войдите." },
-    kz:{ login:"Кіру / Тіркелу", logout:"Аккаунттан шығу", title:"ArboGlow-ға кіру", sub:"Ортақ картада ағаштарды белгілеу үшін кіріңіз.", email:"Пошта", pass:"Құпиясөз (кемінде 6 таңба)", signin:"Кіру", signup:"Аккаунт ашу", toUp:"Аккаунт жоқ па? Тіркелу", toIn:"Аккаунт бар ма? Кіру", bad:"Пошта немесе құпиясөз қате.", exists:"Мұндай аккаунт бар — кіріңіз.", short:"Құпиясөз тым қысқа.", err:"Болмады. Интернетті тексеріп, қайталап көріңіз.", needLogin:"Ағашты ортақ картаға қосу үшін аккаунтқа кіріңіз.", confirm:"Поштаны тексеріп, мекенжайды растаңыз, содан кейін кіріңіз." },
-    en:{ login:"Sign in / Sign up", logout:"Sign out", title:"Sign in to ArboGlow", sub:"Sign in to mark trees on the shared map.", email:"Email", pass:"Password (at least 6 characters)", signin:"Sign in", signup:"Create account", toUp:"No account? Sign up", toIn:"Have an account? Sign in", bad:"Wrong email or password.", exists:"This account already exists — sign in.", short:"Password is too short.", err:"Something went wrong. Check your connection and try again.", needLogin:"Sign in to add a tree to the shared map.", confirm:"Check your email to confirm your address, then sign in." } };
+    ru:{ login:"Войти / Регистрация", logout:"Выйти из аккаунта", title:"Вход в ArboGlow", sub:"Войдите, чтобы отмечать деревья на общей карте.", email:"Почта", pass:"Пароль (минимум 6 символов)", signin:"Войти", signup:"Создать аккаунт", toUp:"Нет аккаунта? Зарегистрироваться", toIn:"Уже есть аккаунт? Войти", bad:"Неверная почта или пароль. Если вы ещё не регистрировались — нажмите «Зарегистрироваться».", notConf:"Почта не подтверждена. Откройте письмо от Supabase и нажмите ссылку.", exists:"Такой аккаунт уже есть — войдите.", short:"Пароль слишком короткий.", err:"Не получилось. Проверьте интернет и попробуйте ещё раз.", needLogin:"Чтобы добавить дерево на общую карту, войдите в аккаунт.", confirm:"Проверьте почту и подтвердите адрес, потом войдите." },
+    kz:{ login:"Кіру / Тіркелу", logout:"Аккаунттан шығу", title:"ArboGlow-ға кіру", sub:"Ортақ картада ағаштарды белгілеу үшін кіріңіз.", email:"Пошта", pass:"Құпиясөз (кемінде 6 таңба)", signin:"Кіру", signup:"Аккаунт ашу", toUp:"Аккаунт жоқ па? Тіркелу", toIn:"Аккаунт бар ма? Кіру", bad:"Пошта немесе құпиясөз қате. Әлі тіркелмеген болсаңыз — «Тіркелу» басыңыз.", notConf:"Пошта расталмаған. Supabase хатындағы сілтемені басыңыз.", exists:"Мұндай аккаунт бар — кіріңіз.", short:"Құпиясөз тым қысқа.", err:"Болмады. Интернетті тексеріп, қайталап көріңіз.", needLogin:"Ағашты ортақ картаға қосу үшін аккаунтқа кіріңіз.", confirm:"Поштаны тексеріп, мекенжайды растаңыз, содан кейін кіріңіз." },
+    en:{ login:"Sign in / Sign up", logout:"Sign out", title:"Sign in to ArboGlow", sub:"Sign in to mark trees on the shared map.", email:"Email", pass:"Password (at least 6 characters)", signin:"Sign in", signup:"Create account", toUp:"No account? Sign up", toIn:"Have an account? Sign in", bad:"Wrong email or password. If you haven't signed up yet, tap “Sign up”.", notConf:"Email not confirmed. Open the email from Supabase and tap the link.", exists:"This account already exists — sign in.", short:"Password is too short.", err:"Something went wrong. Check your connection and try again.", needLogin:"Sign in to add a tree to the shared map.", confirm:"Check your email to confirm your address, then sign in." } };
   const AT = () => AT_TXT[lang] || AT_TXT.ru;
   function authModalUI() {
     let m = $("#authModal"); if (!m) { m = h("div", { class:"modalwrap", id:"authModal" }); $(".app").append(m); }
@@ -894,7 +947,7 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
       S.authBusy = true; S.authMsg = ""; ui();
       try {
         const r = up ? await S.auth.signUp({ email:e, password:p }) : await S.auth.signInWithPassword({ email:e, password:p });
-        if (r.error) { const t = (r.error.message || "").toLowerCase(); S.authMsg = t.includes("already") ? a.exists : t.includes("invalid") ? a.bad : a.err; }
+        if (r.error) { const t = (r.error.message || "").toLowerCase(); S.authMsg = t.includes("already") ? a.exists : t.includes("confirm") ? a.notConf : t.includes("invalid") ? a.bad : a.err; }
         else if (up && !r.data.session) S.authMsg = a.confirm;
         else { S.authModal = false; S.authMsg = ""; S.authPw = ""; }
       } catch (err) { S.authMsg = a.err; }
@@ -1113,8 +1166,8 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
   $("#menuBtn").onclick = () => { S.drawer = true; ui(); };
   $("#backdrop").onclick = () => { S.drawer = false; ui(); };
   $("#fab").onclick = () => go("scan");
-  $("#pickCancel").onclick = () => { S.pick = false; if (S.draft) { S.draft.lat = null; S.draft.lng = null; } S.page = "scan"; ui(); };
-  $("#pickOk").onclick = () => { if (!S.draft || S.draft.lat == null) return; S.pick = false; saveTree(); };
+  $("#pickCancel").onclick = () => { if (S.pickTrap) { S.pick = false; S.pickTrap = false; if (S.trapDraft) S.trapDraft.lat = null; S.page = "trap"; ui(); return; } S.pick = false; if (S.draft) { S.draft.lat = null; S.draft.lng = null; } S.page = "scan"; ui(); };
+  $("#pickOk").onclick = () => { if (S.pickTrap) { if (S.trapDraft && S.trapDraft.lat != null) { S.pick = false; saveTrap(); } return; } if (!S.draft || S.draft.lat == null) return; S.pick = false; saveTree(); };
   $("#zin").onclick = () => zoomAt(1.6, W / 2, H / 2);
   $("#zout").onclick = () => zoomAt(1 / 1.6, W / 2, H / 2);
   $("#northBtn").onclick = () => rotateBy(-S.view.rot);
@@ -1141,7 +1194,7 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
         if (!r.ok) { const e = new Error("ai"); e.code = r.status === 429 ? "rate_limited" : "ai"; throw e; }
         return r.json(); } }; }
       const setSession = ses => { const u = ses && ses.user; S.uid = u ? u.id : null; S.myName = u ? (u.email || "").split("@")[0] : ""; S.canWrite = !!u; S.readOnly = false; ui(); if (u) maybeAskNick(); };
-      try { const { data } = await sb.auth.getSession(); setSession(data.session); } catch (e) {}
+      try { const { data } = await sb.auth.getSession(); setSession(data.session); if (!data.session) { S.authModal = true; S.authMode = "up"; } } catch (e) {}
       sb.auth.onAuthStateChange((_e, ses) => setSession(ses));
       S.db = db; S.dbState = "live"; ui();
       db.collection("users").limit(1000).onSnapshot(snap => {
