@@ -785,7 +785,7 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
     return out[k < 0 ? 1 : k];
   }
   function tmVerdict(p) { return p >= .75 ? "infested" : p >= .45 ? "suspicious" : "healthy"; }
-  const TM_TXT = { ru:p => `Наш сканер: вероятность короеда ${p}%`, kk:p => `Біздің сканер: қабықжегі ықтималдығы ${p}%`, en:p => `Our scanner: bark beetle likelihood ${p}%` };
+  const TM_TXT = { ru:p => `Наш сканер: вероятность короеда ${p}%`, kz:p => `Біздің сканер: қабықжегі ықтималдығы ${p}%`, en:p => `Our scanner: bark beetle likelihood ${p}%` };
   async function runScanner() {
     const D = S.draft; if (!D || !D.blob) return;
     D.tm = { state:"run" }; ui();
@@ -1058,9 +1058,9 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
     else {
       const v = verdictOf(D); const card = { infested:["d", x.vInf], suspicious:["w", x.vSus], healthy:["o", x.vOk], unclear:["w", x.vUnc] }[v];
       const res = h("div", { class:"result " + card[0] }, h("b", { text:card[1] }));
-      if (D.tm && D.tm.state === "done" && !D.edited) res.append(h("p", { style:"font-weight:600", text:TM_TXT[lang](Math.round(D.tm.p * 100)) }));
-      if (D.ai && D.ai.state === "done" && !D.edited && D.ai.holes != null) res.append(h("p", { text:({ ru:"Видно дырочек короеда: ", kk:"Қабықжегі тесіктері: ", en:"Bark beetle holes visible: " })[lang] + (D.ai.holes > 30 ? "30+" : D.ai.holes) }));
-      if (D.ai && D.ai.state === "done" && !D.edited && D.ai.other && D.ai.other !== "none") res.append(h("p", { class:"muted", text:({ ru:"Похоже, повреждение не от короеда: ", kk:"Зақым қабықжегіден емес сияқты: ", en:"Damage seems not from bark beetles: " })[lang] + (({ woodpecker:{ ru:"дятел", kk:"тоқылдақ", en:"woodpecker" }, other_insect:{ ru:"другое насекомое", kk:"басқа жәндік", en:"another insect" }, cracks:{ ru:"трещины коры", kk:"қабық жарықтары", en:"bark cracks" }, lichen_moss:{ ru:"лишайник или мох", kk:"қына не мүк", en:"lichen or moss" }, fungus:{ ru:"грибок", kk:"саңырауқұлақ", en:"fungus" }, mechanical:{ ru:"механическое повреждение", kk:"механикалық зақым", en:"mechanical damage" } })[D.ai.other] || { ru:"другая причина", kk:"басқа себеп", en:"another cause" })[lang] }));
+      if (D.tm && D.tm.state === "done" && !D.edited) res.append(h("p", { style:"font-weight:600", text:(TM_TXT[lang] || TM_TXT.ru)(Math.round(D.tm.p * 100)) }));
+      if (D.ai && D.ai.state === "done" && !D.edited && D.ai.holes != null) res.append(h("p", { text:({ ru:"Видно дырочек короеда: ", kz:"Қабықжегі тесіктері: ", en:"Bark beetle holes visible: " })[lang] + (D.ai.holes > 30 ? "30+" : D.ai.holes) }));
+      if (D.ai && D.ai.state === "done" && !D.edited && D.ai.other && D.ai.other !== "none") res.append(h("p", { class:"muted", text:({ ru:"Похоже, повреждение не от короеда: ", kz:"Зақым қабықжегіден емес сияқты: ", en:"Damage seems not from bark beetles: " })[lang] + (({ woodpecker:{ ru:"дятел", kz:"тоқылдақ", en:"woodpecker" }, other_insect:{ ru:"другое насекомое", kz:"басқа жәндік", en:"another insect" }, cracks:{ ru:"трещины коры", kz:"қабық жарықтары", en:"bark cracks" }, lichen_moss:{ ru:"лишайник или мох", kz:"қына не мүк", en:"lichen or moss" }, fungus:{ ru:"грибок", kz:"саңырауқұлақ", en:"fungus" }, mechanical:{ ru:"механическое повреждение", kz:"механикалық зақым", en:"mechanical damage" } })[D.ai.other] || { ru:"другая причина", kz:"басқа себеп", en:"another cause" })[lang] }));
       if (D.ai && D.ai.state === "done" && !D.edited) res.append(h("p", { text:txt(D.ai.explanation) }), h("p", { class:"muted", style:"margin-top:6px", text:x.conf(D.ai.confidence) }));
       else if (D.ai && D.ai.state === "error" && !(D.tm && D.tm.state === "done")) res.append(h("p", { class:"muted", text:x[D.ai.key] }));
       else if (D.ai && D.ai.state === "off" && !(D.tm && D.tm.state === "done")) res.append(h("p", { class:"muted", text:x.aiOff }));
