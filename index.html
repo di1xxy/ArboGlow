@@ -497,6 +497,8 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
       D.finding = true; S.msg = ""; ui();
       locate().then(p => { D.finding = false; if (S.trapDraft !== D) return; if (p && inCity(p.lat, p.lng)) { D.lat = +p.lat.toFixed(6); D.lng = +p.lng.toFixed(6); S.me = p; saveTrap(); } else { S.msg = a.far; ui(); } }); }));
     body.append(opt("background:var(--bark);color:var(--surface)", "pin", a.map, a.mapSub, () => { S.pickTrap = true; S.pick = true; S.page = null; D.lat = null; D.lng = null; ui(); }));
+    if (D.manual) body.append(coordForm(p => { D.lat = p.lat; D.lng = p.lng; saveTrap(); }));
+    else body.append(opt("background:var(--surface-2);color:var(--ink)", "pin", MC().manual, MC().manualSub, () => { D.manual = true; ui(); }));
     if (S.msg) body.append(h("p", { class:"notice", text:S.msg }));
   }
   function trapViewPage(body) {
@@ -928,6 +930,28 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
   function go(page) { S.drawer = false; S.pick = false; S.pickTrap = false; if (page === "trap") S.trapDraft = null; S.msg = ""; S.confirmDelete = false; if (page === "scan" && !S.draft) startScan(); if (page !== "tree" && page !== "zone" && page !== "trapv") S.selected = null; S.page = page; ui(); }
   function startScan() { S.draft = { blob:null, data:null, signs:[], ai:null, edited:false, sp:0, note:"", lat:null, lng:null, locSource:null, locState:"idle" }; }
   // "Where is the tree?" dialog shown after the scan
+  const MC_TXT = {
+    ru:{ gal:"Загрузить фото из галереи", manual:"Ввести координаты", manualSub:"Например, из Google или 2ГИС", lat:"Широта", lng:"Долгота", ph:"51.1282, 71.4304", ok:"Сохранить", bad:"Введите координаты в формате 51.1282, 71.4304", far:"Эта точка не в Астане. Проверьте координаты.", hint:"Можно вставить сразу обе цифры через запятую." },
+    kz:{ gal:"Галереядан сурет жүктеу", manual:"Координаттарды енгізу", manualSub:"Мысалы, Google не 2ГИС-тен", lat:"Ендік", lng:"Бойлық", ph:"51.1282, 71.4304", ok:"Сақтау", bad:"Координаттарды 51.1282, 71.4304 пішімінде енгізіңіз", far:"Бұл нүкте Астанада емес. Координаттарды тексеріңіз.", hint:"Екі санды үтір арқылы бірден қоюға болады." },
+    en:{ gal:"Upload a photo from gallery", manual:"Enter coordinates", manualSub:"E.g. copied from Google Maps or 2GIS", lat:"Latitude", lng:"Longitude", ph:"51.1282, 71.4304", ok:"Save", bad:"Enter coordinates like 51.1282, 71.4304", far:"This point is not in Astana. Check the coordinates.", hint:"You can paste both numbers at once, separated by a comma." } };
+  const MC = () => MC_TXT[lang] || MC_TXT.ru;
+  function parseLL(a, b) {
+    const nums = (String(a) + " " + String(b || "")).replace(/,(?=\d)/g, ".").match(/-?\d+(?:\.\d+)?/g);
+    if (!nums || nums.length < 2) return null; let la = +nums[0], ln = +nums[1];
+    if (la > 60 && ln < 60) [la, ln] = [ln, la];
+    return Number.isFinite(la) && Number.isFinite(ln) ? { lat:+la.toFixed(6), lng:+ln.toFixed(6) } : null;
+  }
+  function coordForm(onSave) {
+    const a = MC(); let err = "";
+    const la = h("input", { class:"nick", inputmode:"decimal", placeholder:a.ph, "aria-label":a.lat, autocomplete:"off" });
+    const ln = h("input", { class:"nick", inputmode:"decimal", placeholder:"", "aria-label":a.lng, autocomplete:"off" });
+    const msg = h("p", { class:"notice", hidden:true });
+    la.oninput = () => { const p = parseLL(la.value); if (p && /[ ,;]/.test(la.value.trim())) { la.value = p.lat; ln.value = p.lng; } };
+    const go = () => { const p = parseLL(la.value, ln.value); if (!p) { msg.textContent = a.bad; msg.hidden = false; return; } if (!inCity(p.lat, p.lng)) { msg.textContent = a.far; msg.hidden = false; return; } onSave(p); };
+    return h("form", { style:"display:flex;flex-direction:column;gap:8px", onsubmit:e => { e.preventDefault(); go(); } },
+      h("label", { class:"lbl", text:a.lat }), la, h("label", { class:"lbl", text:a.lng }), ln,
+      h("p", { class:"muted", text:a.hint }), msg, h("button", { class:"btn primary block", type:"submit" }, a.ok));
+  }
   function locModalUI() {
     const x = tr(), m = $("#locModal"), D = S.draft; m.hidden = !S.locModal || !D; m.textContent = ""; if (m.hidden) return;
     const busy = D.locState === "finding";
@@ -936,6 +960,8 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
       h("h2", { text:x.locTitle }), h("p", { class:"sub", text:x.locSub }),
       opt("background:var(--green);color:var(--green-ink)", "gps", x.useMy, busy ? x.locFinding : x.useMySub, useMyLocation),
       opt("background:var(--bark);color:var(--surface)", "pin", x.onMap, x.onMapSub, () => { S.locModal = false; S.pick = true; S.page = null; D.lat = null; D.lng = null; ui(); }));
+    if (D.manual) card.append(coordForm(p => { D.lat = p.lat; D.lng = p.lng; D.locSource = "map"; D.locState = "ok"; D.manual = false; S.locModal = false; saveTree(); }));
+    else card.append(opt("background:var(--surface-2);color:var(--ink)", "pin", MC().manual, MC().manualSub, () => { D.manual = true; ui(); }));
     if (busy) card.append(h("div", { style:"display:flex;justify-content:center" }, h("span", { class:"spin" })));
     if (D.locState === "none" || D.locState === "far") card.append(h("p", { class:"notice", text:D.locState === "far" ? x.locFarTxt : x.locFail }));
     card.append(h("button", { class:"cancel", onclick:() => { S.locModal = false; ui(); } }, x.cancel));
@@ -1042,12 +1068,16 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
 
   function scanPage(body) {
     const x = tr(); if (!S.draft) startScan(); const D = S.draft;
+    const onPhoto = async e => { const f = e.target.files && e.target.files[0]; if (!f) return;
+        try { const p = await prepPhoto(f); D.blob = p.blob; D.data = p.data; D.signs = []; D.edited = false; D.ai = null; D.tm = null; S.msg = ""; ui(); runScanner(); } catch (er) { S.msg = x.photoErr; ui(); } };
+    const gal = h("input", { type:"file", id:"photoGal", accept:"image/*", style:"position:absolute;width:1px;height:1px;opacity:0", onchange:onPhoto });
     const file = h("input", { type:"file", id:"photoIn", accept:"image/*", capture:"environment", style:"position:absolute;width:1px;height:1px;opacity:0",
       onchange:async e => { const f = e.target.files && e.target.files[0]; if (!f) return;
         try { const p = await prepPhoto(f); D.blob = p.blob; D.data = p.data; D.signs = []; D.edited = false; D.ai = null; D.tm = null; S.msg = ""; ui(); runScanner(); } catch (er) { S.msg = x.photoErr; ui(); } } });
     if (!D.data) {
       body.append(h("p", { class:"lead", text:x.scanLead }), h("p", { class:"muted", text:x.scanTip }), file,
-        h("label", { for:"photoIn", class:"btn primary block", style:"padding:15px;font-size:16px" }, svgEl(ICON.camera), x.takePhoto));
+        h("label", { for:"photoIn", class:"btn primary block", style:"padding:15px;font-size:16px" }, svgEl(ICON.camera), x.takePhoto),
+        gal, h("label", { for:"photoGal", class:"btn block", style:"padding:13px;font-size:15px" }, MC().gal));
       if (S.msg) body.append(h("p", { class:"notice", text:S.msg }));
       return;
     }
