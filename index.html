@@ -241,7 +241,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
       connLost:"Связь с общей картой прервалась. Обновите страницу.",
       zin:"Приблизить", zout:"Отдалить", north:"Север наверху", rotL:"Повернуть влево", rotR:"Повернуть вправо", loc:"Моё местоположение",
       locNo:"Местоположение недоступно", locFar:"Вы сейчас не в Астане", added:"Дерево добавлено на общую карту",
-      sheetScan:"Сканировать дерево", sheetAbout:"О нас", sheetTree:"Дерево", nickT:"Как вас называть?", nickSub:"Это имя увидят другие, когда нажмут на дерево, которое вы отметили.", nickPh:"Ваше имя", nickSave:"Сохранить", nickLater:"Позже", nickShort:"Имя должно быть от 2 до 30 символов", nickErr:"Не получилось сохранить имя", nickEdit:"Изменить имя", sheetZone:"Зона риска", zSince:"Зона риска с", zCause:"Причина", zCauseV:"рядом заражённое дерево", zRadius:"Радиус", zR:"30 м вокруг заражённого дерева", zInf:"Заражённых в зоне", zWhat:"Что делать", zWhatV:"Осмотреть деревья в этой зоне: если на коре есть дырочки или буровая мука — отсканировать их.", zOpen:"Открыть заражённое дерево",
+      sheetScan:"Сканировать дерево", sheetAbout:"О нас", sheetTree:"Дерево", nickT:"Как вас называть?", nickSub:"Это имя увидят другие, когда нажмут на дерево, которое вы отметили.", nickPh:"Ваше имя", nickSave:"Сохранить", nickLater:"Позже", nickShort:"Имя должно быть от 2 до 30 символов", nickErr:"Не получилось сохранить имя", nickEdit:"Изменить имя", sheetZone:"Зона риска", zSince:"Зона риска с", zCause:"Причина", zCauseV:"рядом заражённое дерево", zRadius:"Радиус", zR:"15 м вокруг заражённого дерева", zInf:"Заражённых в зоне", zWhat:"Что делать", zWhatV:"Осмотреть деревья в этой зоне: если на коре есть дырочки или буровая мука — отсканировать их.", zOpen:"Открыть заражённое дерево",
       scanLead:"Сфотографируйте кору дерева, которое кажется больным.", scanTip:"Снимайте ствол крупно и при хорошем свете. Ищите мелкие дырочки, бурую «муку» на коре и места, где отходит кора.",
       takePhoto:"Сфотографировать кору", retake:"Переснять", photoErr:"Не получилось открыть фото. Попробуйте другой снимок.", scanning:"ИИ-сканер изучает фото…",
       vInf:"Найдены признаки короеда", vSus:"Есть подозрение на короеда", vOk:"Признаков короеда не видно", vUnc:"Не удалось разобрать фото",
@@ -258,7 +258,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
       saveRO:"Не получилось сохранить: у вас доступ только для просмотра.", saveQuota:"База заполнена. Удалите старые точки и попробуйте снова.", saveErr:"Не получилось сохранить. Проверьте интернет и нажмите ещё раз.",
       stInf:"Заражено", stInfV:"Подтверждено специалистом", stInfW:"Ждёт проверки специалиста", stFel:"Спилено", stTr:"Вылечено",
       example:"Это пример, а не настоящее дерево.", aiSaw:"Что увидел ИИ-сканер", dSigns:"Признаки", dNone:"не отмечены", dAdded:"Добавлено", dBy:"Отметил(а)", dYou:"вы",
-      dSomeone:"другой участник карты", dPlace:"Место", dGps:"по GPS", dNear:"Рядом", near:n => n ? `ещё ${n} заражённых в радиусе 30 м` : "других заражённых в радиусе 30 м нет", dNote:"Заметка",
+      dSomeone:"другой участник карты", dPlace:"Место", dGps:"по GPS", dNear:"Рядом", near:n => n ? `ещё ${n} заражённых в радиусе 15 м` : "других заражённых в радиусе 15 м нет", dNote:"Заметка",
       gmaps:"Открыть в Google Картах", copy:"Копировать координаты", copied:"Скопировано", forSpec:"Для специалиста и службы озеленения",
       confirmBtn:"Подтвердить заражение", unconfirm:"Снять подтверждение", fell:"Дерево спилено", treat:"Дерево вылечено", unfell:"Вернуть как заражённое", del:"Удалить",
       delQ:"Удалить это дерево с карты для всех? Используйте, если отметили по ошибке.", delErr:"Не получилось удалить.", chgErr:"Не получилось сохранить изменение.", gone:"Этого дерева больше нет на карте.",
@@ -292,7 +292,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
       connLost:"Ортақ картамен байланыс үзілді. Бетті жаңартыңыз.",
       zin:"Жақындату", zout:"Алыстату", north:"Солтүстік жоғарыда", rotL:"Солға бұру", rotR:"Оңға бұру", loc:"Менің орным",
       locNo:"Орналасу қолжетімсіз", locFar:"Сіз қазір Астанада емессіз", added:"Ағаш ортақ картаға қосылды",
-      sheetScan:"Ағашты сканерлеу", sheetAbout:"Біз туралы", sheetTree:"Ағаш", nickT:"Сізді қалай атайық?", nickSub:"Бұл есімді сіз белгілеген ағашты басқан адамдар көреді.", nickPh:"Сіздің есіміңіз", nickSave:"Сақтау", nickLater:"Кейінірек", nickShort:"Есім 2–30 таңбадан тұруы керек", nickErr:"Есімді сақтау мүмкін болмады", nickEdit:"Есімді өзгерту", sheetZone:"Қауіп аймағы", zSince:"Қауіп аймағы басталған күн", zCause:"Себебі", zCauseV:"жақын жерде зақымданған ағаш бар", zRadius:"Радиус", zR:"зақымданған ағаштың айналасындағы 30 м", zInf:"Аймақтағы зақымданған ағаштар", zWhat:"Не істеу керек", zWhatV:"Осы аймақтағы ағаштарды қарап шығу: қабығында тесіктер немесе бұрғы ұнтағы болса — сканерлеу.", zOpen:"Зақымданған ағашты ашу",
+      sheetScan:"Ағашты сканерлеу", sheetAbout:"Біз туралы", sheetTree:"Ағаш", nickT:"Сізді қалай атайық?", nickSub:"Бұл есімді сіз белгілеген ағашты басқан адамдар көреді.", nickPh:"Сіздің есіміңіз", nickSave:"Сақтау", nickLater:"Кейінірек", nickShort:"Есім 2–30 таңбадан тұруы керек", nickErr:"Есімді сақтау мүмкін болмады", nickEdit:"Есімді өзгерту", sheetZone:"Қауіп аймағы", zSince:"Қауіп аймағы басталған күн", zCause:"Себебі", zCauseV:"жақын жерде зақымданған ағаш бар", zRadius:"Радиус", zR:"зақымданған ағаштың айналасындағы 15 м", zInf:"Аймақтағы зақымданған ағаштар", zWhat:"Не істеу керек", zWhatV:"Осы аймақтағы ағаштарды қарап шығу: қабығында тесіктер немесе бұрғы ұнтағы болса — сканерлеу.", zOpen:"Зақымданған ағашты ашу",
       scanLead:"Ауру сияқты көрінетін ағаштың қабығын суретке түсіріңіз.", scanTip:"Діңді жақыннан, жарық жерде түсіріңіз. Қабықтағы ұсақ тесіктерді, қоңыр «ұнтақты» және қабығы ажыраған жерлерді іздеңіз.",
       takePhoto:"Қабықты суретке түсіру", retake:"Қайта түсіру", photoErr:"Суретті ашу мүмкін болмады. Басқа сурет қолданып көріңіз.", scanning:"ЖИ-сканер суретті тексеріп жатыр…",
       vInf:"Қабықжегі белгілері табылды", vSus:"Қабықжегі болуы мүмкін", vOk:"Қабықжегі белгілері көрінбейді", vUnc:"Суретті анықтау мүмкін болмады",
@@ -309,7 +309,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
       saveRO:"Сақтау мүмкін болмады: сізде тек көру рұқсаты бар.", saveQuota:"Дерекқор толды. Ескі нүктелерді өшіріп, қайта көріңіз.", saveErr:"Сақтау мүмкін болмады. Интернетті тексеріп, қайта басыңыз.",
       stInf:"Зақымданған", stInfV:"Маман растады", stInfW:"Маманның тексеруін күтуде", stFel:"Кесілген", stTr:"Емделді",
       example:"Бұл нақты ағаш емес, мысал.", aiSaw:"ЖИ-сканер не көрді", dSigns:"Белгілер", dNone:"белгіленбеген", dAdded:"Қосылды", dBy:"Белгілеген", dYou:"сіз",
-      dSomeone:"картаның басқа қатысушысы", dPlace:"Орны", dGps:"GPS бойынша", dNear:"Жақын маңда", near:n => n ? `30 м радиуста тағы ${n} зақымданған ағаш` : "30 м радиуста басқа зақымданған ағаш жоқ", dNote:"Ескертпе",
+      dSomeone:"картаның басқа қатысушысы", dPlace:"Орны", dGps:"GPS бойынша", dNear:"Жақын маңда", near:n => n ? `15 м радиуста тағы ${n} зақымданған ағаш` : "15 м радиуста басқа зақымданған ағаш жоқ", dNote:"Ескертпе",
       gmaps:"Google Maps-та ашу", copy:"Координаттарды көшіру", copied:"Көшірілді", forSpec:"Маман мен көгалдандыру қызметі үшін",
       confirmBtn:"Зақымдануды растау", unconfirm:"Растауды алып тастау", fell:"Ағаш кесілді", treat:"Ағаш емделді", unfell:"Зақымданған деп қайтару", del:"Өшіру",
       delQ:"Бұл ағашты барлығы үшін картадан өшіру керек пе? Қате белгілеген болсаңыз ғана қолданыңыз.", delErr:"Өшіру мүмкін болмады.", chgErr:"Өзгерісті сақтау мүмкін болмады.", gone:"Бұл ағаш картада енді жоқ.",
@@ -343,7 +343,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
       connLost:"Lost connection to the shared map. Reload the page.",
       zin:"Zoom in", zout:"Zoom out", north:"North up", rotL:"Rotate left", rotR:"Rotate right", loc:"My location",
       locNo:"Location unavailable", locFar:"You're not in Astana right now", added:"Tree added to the shared map",
-      sheetScan:"Scan a tree", sheetAbout:"About us", sheetTree:"Tree", nickT:"What should we call you?", nickSub:"Others will see this name when they tap a tree you marked.", nickPh:"Your name", nickSave:"Save", nickLater:"Later", nickShort:"The name must be 2 to 30 characters", nickErr:"Couldn't save the name", nickEdit:"Change name", sheetZone:"Risk zone", zSince:"Risk zone since", zCause:"Reason", zCauseV:"an infested tree nearby", zRadius:"Radius", zR:"30 m around the infested tree", zInf:"Infested trees in the zone", zWhat:"What to do", zWhatV:"Check the trees in this zone: if the bark has small holes or boring dust, scan them.", zOpen:"Open the infested tree",
+      sheetScan:"Scan a tree", sheetAbout:"About us", sheetTree:"Tree", nickT:"What should we call you?", nickSub:"Others will see this name when they tap a tree you marked.", nickPh:"Your name", nickSave:"Save", nickLater:"Later", nickShort:"The name must be 2 to 30 characters", nickErr:"Couldn't save the name", nickEdit:"Change name", sheetZone:"Risk zone", zSince:"Risk zone since", zCause:"Reason", zCauseV:"an infested tree nearby", zRadius:"Radius", zR:"15 m around the infested tree", zInf:"Infested trees in the zone", zWhat:"What to do", zWhatV:"Check the trees in this zone: if the bark has small holes or boring dust, scan them.", zOpen:"Open the infested tree",
       scanLead:"Take a photo of the bark of a tree that looks sick.", scanTip:"Shoot the trunk up close in good light. Look for tiny holes, brown “dust” on the bark and places where the bark peels off.",
       takePhoto:"Photograph the bark", retake:"Retake", photoErr:"Couldn't open the photo. Try another one.", scanning:"The AI scanner is checking the photo…",
       vInf:"Bark beetle signs found", vSus:"Possible bark beetles", vOk:"No bark beetle signs", vUnc:"Couldn't read the photo",
@@ -360,7 +360,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
       saveRO:"Couldn't save: you only have view access.", saveQuota:"The database is full. Delete old points and try again.", saveErr:"Couldn't save. Check your internet and try again.",
       stInf:"Infested", stInfV:"Confirmed by a specialist", stInfW:"Awaiting a specialist", stFel:"Cut down", stTr:"Treated",
       example:"This is an example, not a real tree.", aiSaw:"What the AI scanner saw", dSigns:"Signs", dNone:"none ticked", dAdded:"Added", dBy:"Marked by", dYou:"you",
-      dSomeone:"another map user", dPlace:"Location", dGps:"by GPS", dNear:"Nearby", near:n => n ? `${n} more infested within 30 m` : "no other infested trees within 30 m", dNote:"Note",
+      dSomeone:"another map user", dPlace:"Location", dGps:"by GPS", dNear:"Nearby", near:n => n ? `${n} more infested within 15 m` : "no other infested trees within 15 m", dNote:"Note",
       gmaps:"Open in Google Maps", copy:"Copy coordinates", copied:"Copied", forSpec:"For specialists and the city greening service",
       confirmBtn:"Confirm infestation", unconfirm:"Remove confirmation", fell:"Tree cut down", treat:"Tree treated", unfell:"Mark as infested again", del:"Delete",
       delQ:"Delete this tree from the map for everyone? Use only if it was marked by mistake.", delErr:"Couldn't delete.", chgErr:"Couldn't save the change.", gone:"This tree is no longer on the map.",
@@ -394,7 +394,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
   const toLL = (x, y) => ({ lng: M.LON0 + x * U / M.KX, lat: M.LAT0 - y * U / M.KY });
   const distM = (a, b) => Math.hypot((a.lng - b.lng) * M.KX, (a.lat - b.lat) * M.KY);
   const inCity = (lat, lng) => lat > 51.0 && lat < 51.3 && lng > 71.2 && lng < 71.7;
-  const RADIUS = 30;
+  const RADIUS = 15;
   function buildPaths(arrs, close) {
     const p = new Path2D();
     for (const a of arrs) { let x = a[0], y = a[1]; p.moveTo(x, y); for (let i = 2; i < a.length; i += 2) { x += a[i]; y += a[i + 1]; p.lineTo(x, y); } if (close) p.closePath(); }
