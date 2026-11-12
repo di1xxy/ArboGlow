@@ -274,7 +274,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
         whyT:"Почему это важно", why:"Деревьям в Астане и так тяжело: солёная почва, сухие ветры, мало полива. Ослабленное дерево не может защититься, и короеды переходят с одного дерева на другое. На карагаче, главном дереве города, живут заболонники — они переносят грибок голландской болезни, от которого вяз засыхает.",
         howT:"Как помочь за минуту", how:["Сфотографируйте кору подозрительного дерева.","ИИ-сканер проверит, есть ли признаки короеда.","Дерево появится на общей карте, и все будут знать, каким деревьям нужна помощь."],
         signsT:"На что смотреть", signs:["дырочки в коре","бурая «мука»","ходы под корой","отходит кора","сохнут ветки"],
-        colorsT:"Что значат цвета на карте", colors:[["infested","Красный — заражённое дерево"],["risk","Оранжевый — зона риска: соседние деревья стоит проверить"],["felled","Синий — дерево уже спилено, жуки из него не разлетятся"]],
+        colorsT:"Что значат цвета на карте", colors:[["infested","Красный — заражённое дерево"],["risk","Оранжевый — зона риска: соседние деревья стоит проверить"],["trap","Жёлтый ромбик — ловушка для короедов: место, где поставили ловушку"],["felled","Синий — дерево уже спилено, жуки из него не разлетятся"]],
         foundT:"Если вы нашли больное дерево", found:["Не отрывайте кору и не трогайте жуков.","Отсканируйте дерево — оно появится на карте."],
         note:"ИИ-сканер — подсказка, а не диагноз: окончательно решает специалист. Отметки видят все, кто вошёл в аккаунт, а имя автора видно только в карточке дерева.",
         cta:"Сканировать дерево"
@@ -325,7 +325,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
         whyT:"Неге бұл маңызды", why:"Астанада ағаштарға онсыз да қиын: топырақ тұзды, жел құрғақ, суару аз. Әлсіреген ағаш өзін қорғай алмайды, ал қабықжегілер бір ағаштан екіншісіне өтеді. Қаланың басты ағашы — қарағашта шегіршін қабықжегілері тіршілік етеді. Олар голланд ауруының саңырауқұлағын таратады, содан шегіршін қурап қалады.",
         howT:"Бір минутта қалай көмектесуге болады", how:["Күдікті ағаштың қабығын суретке түсіріңіз.","ЖИ-сканер қабықжегі белгілерін тексереді.","Ағаш ортақ картада пайда болады, сонда бәрі қай ағаштарға көмек керек екенін біледі."],
         signsT:"Неге назар аудару керек", signs:["қабықтағы тесіктер","қоңыр «ұнтақ»","қабық астындағы жолдар","қабық ажырайды","бұтақтар қурайды"],
-        colorsT:"Картадағы түстердің мағынасы", colors:[["infested","Қызыл — зақымданған ағаш"],["risk","Қызғылт сары — қауіп аймағы: көрші ағаштарды тексерген жөн"],["felled","Көк — ағаш кесілген, қоңыздар одан тарамайды"]],
+        colorsT:"Картадағы түстердің мағынасы", colors:[["infested","Қызыл — зақымданған ағаш"],["risk","Қызғылт сары — қауіп аймағы: көрші ағаштарды тексерген жөн"],["trap","Сары ромб — қабықжегі аулағышы: аулағыш қойылған орын"],["felled","Көк — ағаш кесілген, қоңыздар одан тарамайды"]],
         foundT:"Ауру ағаш тапсаңыз", found:["Қабықты жұлмаңыз және қоңыздарды ұстамаңыз.","Ағашты сканерлеңіз — ол картада пайда болады."],
         note:"ЖИ-сканер — диагноз емес, кеңес қана: соңғы шешімді маман қабылдайды. Белгілерді аккаунтқа кірген барлық адам көреді, ал авторының аты тек ағаш карточкасында көрінеді.",
         cta:"Ағашты сканерлеу"
@@ -376,7 +376,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
         whyT:"Why it matters", why:"Trees in Astana already have a hard life: salty soil, dry winds, little watering. A weakened tree can't defend itself, and bark beetles move from one tree to the next. The karagach, the city's main tree, hosts elm bark beetles that spread the Dutch elm disease fungus, which makes elms dry out.",
         howT:"Help in one minute", how:["Photograph the bark of a suspicious tree.","The AI scanner checks for bark beetle signs.","The tree appears on the shared map, so everyone knows which trees need help."],
         signsT:"What to look for", signs:["holes in the bark","brown “dust”","tunnels under the bark","peeling bark","dying branches"],
-        colorsT:"What the map colors mean", colors:[["infested","Red — infested tree"],["risk","Orange — risk zone: check the trees nearby"],["felled","Blue — the tree has been cut down, the beetles won't spread from it"]],
+        colorsT:"What the map colors mean", colors:[["infested","Red — infested tree"],["risk","Orange — risk zone: check the trees nearby"],["trap","Yellow diamond — bark beetle trap: where a trap has been placed"],["felled","Blue — the tree has been cut down, the beetles won't spread from it"]],
         foundT:"If you find a sick tree", found:["Don't peel the bark or touch the beetles.","Scan the tree — it will appear on the map."],
         note:"The AI scanner gives a hint, not a diagnosis: a specialist decides. Everyone who is signed in sees the marks; the author's name shows only in the tree card.",
         cta:"Scan a tree"
@@ -803,9 +803,13 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
   function verdictOf(D) {
     const T = D.tm && D.tm.state === "done" && !D.edited ? tmVerdict(D.tm.p) : null, A = D.ai && D.ai.state === "done" && !D.edited ? D.ai : null;
     if (A && !A.isTree) return "unclear";
-    if (T && A) { const a = A.verdict, other = A.other && A.other !== "none";
-      if (a === "infested" && T !== "healthy") return "infested";
-      if ((a === "healthy" || other) && T !== "infested") return "healthy";
+    if (T && A) { const a = A.verdict, other = A.other && A.other !== "none", sure = A.confidence === "medium" || A.confidence === "high";
+      if (a === "unclear" && !sure) return T;
+      if (a === "unclear") return "unclear";
+      if (other && a !== "infested") return "healthy";
+      if (a === "healthy" && sure && !(A.holes > 0)) return "healthy";
+      if (a === "infested" && (T !== "healthy" || (sure && A.holes >= 3))) return "infested";
+      if (a === "healthy" && T !== "infested") return "healthy";
       if (a === "unclear") return T;
       return "suspicious"; }
     if (T) return T; if (D.ai && D.ai.state === "done" && !D.edited) return D.ai.verdict; const n = D.signs.length; return n >= 2 ? "infested" : n === 1 ? "suspicious" : "healthy"; }
@@ -1168,7 +1172,7 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
       h("h3", { text:A.howT }), h("ol", { class:"steps" }, ...A.how.map(s => h("li", {}, h("span", { text:s })))),
       h("h3", { text:A.signsT }), h("div", { class:"chips" }, ...A.signs.map(s => h("span", { text:s }))),
       h("div", { class:"team" }, h("p", { class:"tt" }, A.teamT, h("span", { class:"hl", text:"QuantumX" })), h("p", { text:A.team })),
-      h("h3", { text:A.colorsT }), h("div", { class:"colors" }, ...A.colors.map(([c, s]) => h("div", {}, h("i", { style:`background:var(--${c})` }), h("span", { text:s })))),
+      h("h3", { text:A.colorsT }), h("div", { class:"colors" }, ...A.colors.map(([c, s]) => h("div", {}, h("i", { style:`background:var(--${c})` + (c === "trap" ? ";border-radius:2px;transform:rotate(45deg) scale(.85)" : "") }), h("span", { text:s })))),
       h("h3", { text:A.foundT }), h("ul", {}, ...A.found.map(s => h("li", { text:s }))),
       h("p", { class:"muted", text:A.note }));
     body.append(wrap);
