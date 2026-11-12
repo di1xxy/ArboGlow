@@ -922,7 +922,9 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
       acct.append(h("span", { class:"av", text:(nmShown || "?").trim().charAt(0).toUpperCase() }));
       acct.append(h("span", {}, nmShown || x.acctAnon, canNick ? h("small", { text:x.nickEdit }) : ""));
       dr.append(acct);
-      if (S.auth) dr.append(h("button", { class:"btn block", style:"margin-top:8px", onclick:async () => { try { await S.auth.signOut(); } catch (e) {} S.drawer = false; ui(); } }, AT().logout));
+      if (S.auth) dr.append(h("div", { class:"row", style:"margin-top:8px" },
+        h("button", { class:"btn", style:"flex:1", onclick:async () => { try { await S.auth.signOut({ scope:"local" }); } catch (e) {} S.drawer = false; S.authMode = "in"; S.authEmail = ""; S.authPw = ""; S.authMsg = ""; S.authModal = true; ui(); } }, AT().switchAcc),
+        h("button", { class:"btn", style:"flex:1", onclick:async () => { try { await S.auth.signOut({ scope:"local" }); } catch (e) {} S.drawer = false; ui(); } }, AT().logout)));
     }
   }
 
@@ -969,9 +971,9 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
   }
   // ===== Sign in (GitHub version: Supabase accounts with email + password) =====
   const AT_TXT = {
-    ru:{ login:"Войти / Регистрация", logout:"Выйти из аккаунта", title:"Вход в ArboGlow", sub:"Войдите, чтобы отмечать деревья на общей карте.", email:"Почта", pass:"Пароль (минимум 6 символов)", signin:"Войти", signup:"Создать аккаунт", toUp:"Нет аккаунта? Зарегистрироваться", toIn:"Уже есть аккаунт? Войти", bad:"Неверная почта или пароль. Если вы ещё не регистрировались — нажмите «Зарегистрироваться».", notConf:"Почта не подтверждена. Откройте письмо от Supabase и нажмите ссылку.", exists:"Такой аккаунт уже есть — войдите.", short:"Пароль слишком короткий.", err:"Не получилось. Проверьте интернет и попробуйте ещё раз.", needLogin:"Чтобы добавить дерево на общую карту, войдите в аккаунт.", confirm:"Проверьте почту и подтвердите адрес, потом войдите." },
-    kz:{ login:"Кіру / Тіркелу", logout:"Аккаунттан шығу", title:"ArboGlow-ға кіру", sub:"Ортақ картада ағаштарды белгілеу үшін кіріңіз.", email:"Пошта", pass:"Құпиясөз (кемінде 6 таңба)", signin:"Кіру", signup:"Аккаунт ашу", toUp:"Аккаунт жоқ па? Тіркелу", toIn:"Аккаунт бар ма? Кіру", bad:"Пошта немесе құпиясөз қате. Әлі тіркелмеген болсаңыз — «Тіркелу» басыңыз.", notConf:"Пошта расталмаған. Supabase хатындағы сілтемені басыңыз.", exists:"Мұндай аккаунт бар — кіріңіз.", short:"Құпиясөз тым қысқа.", err:"Болмады. Интернетті тексеріп, қайталап көріңіз.", needLogin:"Ағашты ортақ картаға қосу үшін аккаунтқа кіріңіз.", confirm:"Поштаны тексеріп, мекенжайды растаңыз, содан кейін кіріңіз." },
-    en:{ login:"Sign in / Sign up", logout:"Sign out", title:"Sign in to ArboGlow", sub:"Sign in to mark trees on the shared map.", email:"Email", pass:"Password (at least 6 characters)", signin:"Sign in", signup:"Create account", toUp:"No account? Sign up", toIn:"Have an account? Sign in", bad:"Wrong email or password. If you haven't signed up yet, tap “Sign up”.", notConf:"Email not confirmed. Open the email from Supabase and tap the link.", exists:"This account already exists — sign in.", short:"Password is too short.", err:"Something went wrong. Check your connection and try again.", needLogin:"Sign in to add a tree to the shared map.", confirm:"Check your email to confirm your address, then sign in." } };
+    ru:{ login:"Войти / Регистрация", logout:"Выйти", switchAcc:"Сменить аккаунт", title:"Вход в ArboGlow", sub:"Войдите, чтобы отмечать деревья на общей карте.", email:"Почта", pass:"Пароль (минимум 6 символов)", signin:"Войти", signup:"Создать аккаунт", toUp:"Нет аккаунта? Зарегистрироваться", toIn:"Уже есть аккаунт? Войти", bad:"Неверная почта или пароль. Если вы ещё не регистрировались — нажмите «Зарегистрироваться».", notConf:"Почта не подтверждена. Откройте письмо от Supabase и нажмите ссылку.", exists:"Такой аккаунт уже есть — войдите.", short:"Пароль слишком короткий.", err:"Не получилось. Проверьте интернет и попробуйте ещё раз.", needLogin:"Чтобы добавить дерево на общую карту, войдите в аккаунт.", confirm:"Проверьте почту и подтвердите адрес, потом войдите." },
+    kz:{ login:"Кіру / Тіркелу", logout:"Шығу", switchAcc:"Аккаунтты ауыстыру", title:"ArboGlow-ға кіру", sub:"Ортақ картада ағаштарды белгілеу үшін кіріңіз.", email:"Пошта", pass:"Құпиясөз (кемінде 6 таңба)", signin:"Кіру", signup:"Аккаунт ашу", toUp:"Аккаунт жоқ па? Тіркелу", toIn:"Аккаунт бар ма? Кіру", bad:"Пошта немесе құпиясөз қате. Әлі тіркелмеген болсаңыз — «Тіркелу» басыңыз.", notConf:"Пошта расталмаған. Supabase хатындағы сілтемені басыңыз.", exists:"Мұндай аккаунт бар — кіріңіз.", short:"Құпиясөз тым қысқа.", err:"Болмады. Интернетті тексеріп, қайталап көріңіз.", needLogin:"Ағашты ортақ картаға қосу үшін аккаунтқа кіріңіз.", confirm:"Поштаны тексеріп, мекенжайды растаңыз, содан кейін кіріңіз." },
+    en:{ login:"Sign in / Sign up", logout:"Sign out", switchAcc:"Switch account", title:"Sign in to ArboGlow", sub:"Sign in to mark trees on the shared map.", email:"Email", pass:"Password (at least 6 characters)", signin:"Sign in", signup:"Create account", toUp:"No account? Sign up", toIn:"Have an account? Sign in", bad:"Wrong email or password. If you haven't signed up yet, tap “Sign up”.", notConf:"Email not confirmed. Open the email from Supabase and tap the link.", exists:"This account already exists — sign in.", short:"Password is too short.", err:"Something went wrong. Check your connection and try again.", needLogin:"Sign in to add a tree to the shared map.", confirm:"Check your email to confirm your address, then sign in." } };
   const AT = () => AT_TXT[lang] || AT_TXT.ru;
   function authModalUI() {
     let m = $("#authModal"); if (!m) { m = h("div", { class:"modalwrap", id:"authModal" }); $(".app").append(m); }
@@ -1232,7 +1234,7 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
   (async () => {
     const CL = window.claude;
     if ((!CL || !CL.use) && window.supabase && window.ARBO_SB) {
-      const sb = window.supabase.createClient(window.ARBO_SB.url, window.ARBO_SB.key);
+      const sb = window.supabase.createClient(window.ARBO_SB.url, window.ARBO_SB.key, { auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true, storageKey:"arboglow-auth", storage:window.localStorage } });
       S.auth = sb.auth; const db = supaDb(sb);
       if (window.ARBO_AI) { S.sampleImages = true; S.sample = { json:async (pr, o) => {
         const img = await createImageBitmap(o.images[0]); const k = Math.min(1, 1024 / Math.max(img.width, img.height));
@@ -1241,7 +1243,7 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
         if (!r.ok) { const e = new Error("ai"); e.code = r.status === 429 ? "rate_limited" : "ai"; throw e; }
         return r.json(); } }; }
       const setSession = ses => { const u = ses && ses.user; S.uid = u ? u.id : null; S.myName = u ? (u.email || "").split("@")[0] : ""; S.canWrite = !!u; S.readOnly = false; ui(); if (u) maybeAskNick(); };
-      try { const { data } = await sb.auth.getSession(); setSession(data.session); if (!data.session) { S.authModal = true; S.authMode = "up"; } } catch (e) {}
+      try { const { data } = await sb.auth.getSession(); setSession(data.session); if (!data.session) { let had = false; try { had = !!localStorage.getItem("arboglow-auth"); } catch (e) {} if (!had) { S.authModal = true; S.authMode = "up"; } } } catch (e) {}
       sb.auth.onAuthStateChange((_e, ses) => setSession(ses));
       S.db = db; S.dbState = "live"; ui();
       db.collection("users").limit(1000).onSnapshot(snap => {
