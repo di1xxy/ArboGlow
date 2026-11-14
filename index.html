@@ -23,7 +23,7 @@
 :root{
   --bg:#eef4e6; --surface:#fbfdf8; --surface-2:#e6efdc; --ink:#2a2a1e; --muted:#676a52; --line:#d4dfc7;
   --green:#4d7e39; --green-ink:#ffffff; --green-soft:#dcebcc; --bark:#7a5433; --bark-soft:#f1e7da;
-  --infested:#d43b2b; --risk:#f08a24; --felled:#2f74c9; --trap:#f2c200;
+  --infested:#d43b2b; --risk:#f08a24; --felled:#2f74c9; --trap:#f2c200; --repel:#8e4ec6;
   --land:#edf3e4; --park:#b5e09a; --wood:#a2d385; --park-edge:#86c160; --walk:#fbf7ea; --pitch:#9fd182; --play:#f4e3a2; --water:#a4cfdc; --road:#ffffff; --road-case:#d3dbc6; --road-major:#ecd3a2; --road-major-case:#c7a36b; --label:#4a4934; --halo:#fbfdf8; --bld:#dfd9cc; --bld-edge:#cdc6b6;
   --display:"Onest", system-ui, sans-serif; --brand:"Montserrat Alternates", "Onest", system-ui, sans-serif;
   --body:"Onest", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -274,7 +274,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
         whyT:"Почему это важно", why:"Деревьям в Астане и так тяжело: солёная почва, сухие ветры, мало полива. Ослабленное дерево не может защититься, и короеды переходят с одного дерева на другое. На карагаче, главном дереве города, живут заболонники — они переносят грибок голландской болезни, от которого вяз засыхает.",
         howT:"Как помочь за минуту", how:["Сфотографируйте кору подозрительного дерева.","ИИ-сканер проверит, есть ли признаки короеда.","Дерево появится на общей карте, и все будут знать, каким деревьям нужна помощь."],
         signsT:"На что смотреть", signs:["дырочки в коре","бурая «мука»","ходы под корой","отходит кора","сохнут ветки"],
-        colorsT:"Что значат цвета на карте", colors:[["infested","Красный — заражённое дерево"],["risk","Оранжевый — зона риска: соседние деревья стоит проверить"],["trap","Жёлтый ромбик — ловушка для короедов: место, где поставили ловушку"],["felled","Синий — дерево уже спилено, жуки из него не разлетятся"]],
+        colorsT:"Что значат цвета на карте", colors:[["infested","Красный — заражённое дерево"],["risk","Оранжевый — зона риска: соседние деревья стоит проверить"],["trap","Жёлтый ромбик — ловушка-приманка: привлекает и ловит короедов"],["repel","Фиолетовый ромбик — ловушка-антиприманка: отпугивает короедов от здоровых деревьев"],["felled","Синий — дерево уже спилено, жуки из него не разлетятся"]],
         foundT:"Если вы нашли больное дерево", found:["Не отрывайте кору и не трогайте жуков.","Отсканируйте дерево — оно появится на карте."],
         note:"ИИ-сканер — подсказка, а не диагноз: окончательно решает специалист. Отметки видят все, кто вошёл в аккаунт, а имя автора видно только в карточке дерева.",
         cta:"Сканировать дерево"
@@ -325,7 +325,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
         whyT:"Неге бұл маңызды", why:"Астанада ағаштарға онсыз да қиын: топырақ тұзды, жел құрғақ, суару аз. Әлсіреген ағаш өзін қорғай алмайды, ал қабықжегілер бір ағаштан екіншісіне өтеді. Қаланың басты ағашы — қарағашта шегіршін қабықжегілері тіршілік етеді. Олар голланд ауруының саңырауқұлағын таратады, содан шегіршін қурап қалады.",
         howT:"Бір минутта қалай көмектесуге болады", how:["Күдікті ағаштың қабығын суретке түсіріңіз.","ЖИ-сканер қабықжегі белгілерін тексереді.","Ағаш ортақ картада пайда болады, сонда бәрі қай ағаштарға көмек керек екенін біледі."],
         signsT:"Неге назар аудару керек", signs:["қабықтағы тесіктер","қоңыр «ұнтақ»","қабық астындағы жолдар","қабық ажырайды","бұтақтар қурайды"],
-        colorsT:"Картадағы түстердің мағынасы", colors:[["infested","Қызыл — зақымданған ағаш"],["risk","Қызғылт сары — қауіп аймағы: көрші ағаштарды тексерген жөн"],["trap","Сары ромб — қабықжегі аулағышы: аулағыш қойылған орын"],["felled","Көк — ағаш кесілген, қоңыздар одан тарамайды"]],
+        colorsT:"Картадағы түстердің мағынасы", colors:[["infested","Қызыл — зақымданған ағаш"],["risk","Қызғылт сары — қауіп аймағы: көрші ағаштарды тексерген жөн"],["trap","Сары ромб — тартатын аулағыш: қабықжегілерді тартып, ұстайды"],["repel","Күлгін ромб — үркітетін аулағыш: қабықжегілерді сау ағаштардан үркітеді"],["felled","Көк — ағаш кесілген, қоңыздар одан тарамайды"]],
         foundT:"Ауру ағаш тапсаңыз", found:["Қабықты жұлмаңыз және қоңыздарды ұстамаңыз.","Ағашты сканерлеңіз — ол картада пайда болады."],
         note:"ЖИ-сканер — диагноз емес, кеңес қана: соңғы шешімді маман қабылдайды. Белгілерді аккаунтқа кірген барлық адам көреді, ал авторының аты тек ағаш карточкасында көрінеді.",
         cta:"Ағашты сканерлеу"
@@ -376,7 +376,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
         whyT:"Why it matters", why:"Trees in Astana already have a hard life: salty soil, dry winds, little watering. A weakened tree can't defend itself, and bark beetles move from one tree to the next. The karagach, the city's main tree, hosts elm bark beetles that spread the Dutch elm disease fungus, which makes elms dry out.",
         howT:"Help in one minute", how:["Photograph the bark of a suspicious tree.","The AI scanner checks for bark beetle signs.","The tree appears on the shared map, so everyone knows which trees need help."],
         signsT:"What to look for", signs:["holes in the bark","brown “dust”","tunnels under the bark","peeling bark","dying branches"],
-        colorsT:"What the map colors mean", colors:[["infested","Red — infested tree"],["risk","Orange — risk zone: check the trees nearby"],["trap","Yellow diamond — bark beetle trap: where a trap has been placed"],["felled","Blue — the tree has been cut down, the beetles won't spread from it"]],
+        colorsT:"What the map colors mean", colors:[["infested","Red — infested tree"],["risk","Orange — risk zone: check the trees nearby"],["trap","Yellow diamond — lure trap: attracts and catches bark beetles"],["repel","Purple diamond — anti-lure trap: keeps bark beetles away from healthy trees"],["felled","Blue — the tree has been cut down, the beetles won't spread from it"]],
         foundT:"If you find a sick tree", found:["Don't peel the bark or touch the beetles.","Scan the tree — it will appear on the map."],
         note:"The AI scanner gives a hint, not a diagnosis: a specialist decides. Everyone who is signed in sees the marks; the author's name shows only in the tree card.",
         cta:"Scan a tree"
@@ -473,27 +473,32 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
   }
   function allTraps() { const out = []; for (const [id, t] of S.trees) if (t.kind === "trap" && Number.isFinite(t.lat) && Number.isFinite(t.lng)) out.push({ ...t, id }); return out; }
   const TT_TXT = {
-    ru:{ menu:"Поставить ловушку", title:"Ловушка", lead:"Отметьте место, где вы поставили ловушку для короедов.", note:"Заметка (необязательно)", notePh:"Например: висит на карагаче у входа в парк", my:"Моё местоположение", mySub:"Ловушка стоит рядом со мной", map:"Выбрать на карте", mapSub:"Нажмите на карту, где стоит ловушка", pick:"Нажмите на карту, где стоит ловушка", saved:"Ловушка отмечена на карте", lg:"Ловушка", pill:"Ловушка", del:"Убрать ловушку с карты", delErr:"Не получилось удалить", saveErr:"Не получилось сохранить ловушку", need:"Чтобы поставить ловушку, войдите в аккаунт.", far:"Вы далеко от Астаны — выберите место на карте.", finding:"Ищем вас…" },
-    kz:{ menu:"Аулағыш қою", title:"Аулағыш", lead:"Қабықжегіге аулағыш қойған жерді белгілеңіз.", note:"Ескертпе (міндетті емес)", notePh:"Мысалы: саябақ кіреберісіндегі қарағашта", my:"Менің орным", mySub:"Аулағыш қасымда тұр", map:"Картадан таңдау", mapSub:"Аулағыш тұрған жерді картадан басыңыз", pick:"Аулағыш тұрған жерді картадан басыңыз", saved:"Аулағыш картада белгіленді", lg:"Аулағыш", pill:"Аулағыш", del:"Аулағышты картадан алып тастау", delErr:"Жою мүмкін болмады", saveErr:"Аулағышты сақтау мүмкін болмады", need:"Аулағыш қою үшін аккаунтқа кіріңіз.", far:"Сіз Астанадан алыссыз — орынды картадан таңдаңыз.", finding:"Іздеп жатырмыз…" },
-    en:{ menu:"Place a trap", title:"Trap", lead:"Mark the place where you set up a bark beetle trap.", note:"Note (optional)", notePh:"E.g. hanging on an elm at the park entrance", my:"My location", mySub:"The trap is next to me", map:"Pick on the map", mapSub:"Tap the map where the trap is", pick:"Tap the map where the trap is", saved:"Trap marked on the map", lg:"Trap", pill:"Trap", del:"Remove trap from the map", delErr:"Couldn't delete", saveErr:"Couldn't save the trap", need:"Sign in to place a trap.", far:"You're far from Astana — pick the place on the map.", finding:"Finding you…" } };
+    ru:{ menu:"Поставить ловушку", title:"Ловушка", tLure:"Ловушка-приманка", tRepel:"Ловушка-антиприманка", tLureS:"Привлекает и ловит короедов", tRepelS:"Отпугивает короедов от здоровых деревьев", typeL:"Тип ловушки", lead:"Отметьте место, где вы поставили ловушку для короедов.", note:"Заметка (необязательно)", notePh:"Например: висит на карагаче у входа в парк", my:"Моё местоположение", mySub:"Ловушка стоит рядом со мной", map:"Выбрать на карте", mapSub:"Нажмите на карту, где стоит ловушка", pick:"Нажмите на карту, где стоит ловушка", saved:"Ловушка отмечена на карте", lg:"Ловушка", pill:"Ловушка", del:"Убрать ловушку с карты", delErr:"Не получилось удалить", saveErr:"Не получилось сохранить ловушку", need:"Чтобы поставить ловушку, войдите в аккаунт.", far:"Вы далеко от Астаны — выберите место на карте.", finding:"Ищем вас…" },
+    kz:{ menu:"Аулағыш қою", title:"Аулағыш", tLure:"Тартатын аулағыш", tRepel:"Үркітетін аулағыш", tLureS:"Қабықжегілерді тартып, ұстайды", tRepelS:"Қабықжегілерді сау ағаштардан үркітеді", typeL:"Аулағыш түрі", lead:"Қабықжегіге аулағыш қойған жерді белгілеңіз.", note:"Ескертпе (міндетті емес)", notePh:"Мысалы: саябақ кіреберісіндегі қарағашта", my:"Менің орным", mySub:"Аулағыш қасымда тұр", map:"Картадан таңдау", mapSub:"Аулағыш тұрған жерді картадан басыңыз", pick:"Аулағыш тұрған жерді картадан басыңыз", saved:"Аулағыш картада белгіленді", lg:"Аулағыш", pill:"Аулағыш", del:"Аулағышты картадан алып тастау", delErr:"Жою мүмкін болмады", saveErr:"Аулағышты сақтау мүмкін болмады", need:"Аулағыш қою үшін аккаунтқа кіріңіз.", far:"Сіз Астанадан алыссыз — орынды картадан таңдаңыз.", finding:"Іздеп жатырмыз…" },
+    en:{ menu:"Place a trap", title:"Trap", tLure:"Lure trap", tRepel:"Anti-lure (repellent) trap", tLureS:"Attracts and catches bark beetles", tRepelS:"Keeps bark beetles away from healthy trees", typeL:"Trap type", lead:"Mark the place where you set up a bark beetle trap.", note:"Note (optional)", notePh:"E.g. hanging on an elm at the park entrance", my:"My location", mySub:"The trap is next to me", map:"Pick on the map", mapSub:"Tap the map where the trap is", pick:"Tap the map where the trap is", saved:"Trap marked on the map", lg:"Trap", pill:"Trap", del:"Remove trap from the map", delErr:"Couldn't delete", saveErr:"Couldn't save the trap", need:"Sign in to place a trap.", far:"You're far from Astana — pick the place on the map.", finding:"Finding you…" } };
   const TT = () => TT_TXT[lang] || TT_TXT.ru;
+  const isRep = t => t && t.ttype === "repel";
+  const tCol = t => isRep(t) ? "var(--repel)" : "var(--trap)";
+  const tInk = t => isRep(t) ? "#ffffff" : "#3a2f00";
   async function saveTrap() {
     const D = S.trapDraft; if (!D || D.lat == null) return;
-    const trap = { kind:"trap", lat:D.lat, lng:D.lng, note:(D.note || "").trim().slice(0, 300), createdAt:new Date().toISOString(), createdBy:S.uid || null };
+    const trap = { kind:"trap", ttype:D.ttype === "repel" ? "repel" : "lure", lat:D.lat, lng:D.lng, note:(D.note || "").trim().slice(0, 300), createdAt:new Date().toISOString(), createdBy:S.uid || null };
     S.busy = true; ui(); let id;
     try { if (S.db) { const ref = S.db.collection("trees").doc(); await ref.set(trap); id = ref.id; S.trees.set(id, trap); } else { id = "localtrap" + Date.now(); S.trees.set(id, trap); } }
     catch (e) { S.busy = false; S.msg = TT().saveErr; S.page = "trap"; S.pick = false; ui(); return; }
     S.busy = false; S.trapDraft = null; S.pickTrap = false; S.pick = false; S.page = "trapv"; S.selected = id; flyTo(trap.lat, trap.lng, .5); toast(TT().saved); ui();
   }
   function trapPage(body) {
-    const a = TT(); if (!S.trapDraft) S.trapDraft = { lat:null, lng:null, note:"", finding:false };
+    const a = TT(); if (!S.trapDraft) S.trapDraft = { lat:null, lng:null, note:"", finding:false, ttype:"lure" };
     const D = S.trapDraft;
     body.append(h("p", { class:"lead", text:a.lead }));
     if (S.auth && !S.uid) { body.append(h("div", { class:"notice", style:"display:flex;flex-direction:column;gap:8px" }, h("span", { text:a.need }), h("button", { class:"btn primary", onclick:() => { S.authModal = true; ui(); } }, AT().login))); return; }
+    const tb = (k, title, sub) => h("button", { class:"opt", style:D.ttype === k ? "outline:3px solid " + (k === "repel" ? "var(--repel)" : "#c9a000") + ";outline-offset:-3px" : "", onclick:() => { D.ttype = k; ui(); } }, h("span", { class:"ic", style:"background:" + (k === "repel" ? "var(--repel)" : "var(--trap)") + ";border-radius:4px;transform:rotate(45deg) scale(.7)" }), h("span", {}, h("b", { text:title }), h("span", { class:"s", text:sub })));
+    body.append(h("p", { style:"font-weight:600;margin:4px 0", text:a.typeL }), tb("lure", a.tLure, a.tLureS), tb("repel", a.tRepel, a.tRepelS));
     const note = h("textarea", { id:"trapNote", placeholder:a.notePh, oninput:e => { D.note = e.target.value.slice(0, 300); } }); note.value = D.note;
     body.append(h("div", { class:"field" }, h("label", { for:"trapNote", text:a.note }), note));
     const opt = (cls, icon, title, sub, onclick) => h("button", { class:"opt", disabled:D.finding || S.busy, onclick }, h("span", { class:"ic", style:cls }, svgEl(ICON[icon])), h("span", {}, h("b", { text:title }), h("span", { class:"s", text:sub })));
-    body.append(opt("background:var(--trap);color:#3a2f00", "gps", a.my, D.finding ? a.finding : a.mySub, () => {
+    body.append(opt("background:" + tCol(D) + ";color:" + tInk(D), "gps", a.my, D.finding ? a.finding : a.mySub, () => {
       D.finding = true; S.msg = ""; ui();
       locate().then(p => { D.finding = false; if (S.trapDraft !== D) return; if (p && inCity(p.lat, p.lng)) { D.lat = +p.lat.toFixed(6); D.lng = +p.lng.toFixed(6); S.me = p; saveTrap(); } else { S.msg = a.far; ui(); } }); }));
     body.append(opt("background:var(--bark);color:var(--surface)", "pin", a.map, a.mapSub, () => { S.pickTrap = true; S.pick = true; S.page = null; D.lat = null; D.lng = null; ui(); }));
@@ -504,7 +509,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
   function trapViewPage(body) {
     const a = TT(), x = tr(), t = allTraps().find(q => q.id === S.selected);
     if (!t) { body.append(h("p", { class:"muted", text:x.gone })); return; }
-    body.append(h("div", { class:"row", style:"align-items:center;justify-content:space-between" }, h("span", { style:"font-weight:600;font-size:16px", text:a.title }), h("span", { class:"pill", style:"background:var(--trap);color:#3a2f00", text:a.pill })));
+    body.append(h("div", { class:"row", style:"align-items:center;justify-content:space-between" }, h("span", { style:"font-weight:600;font-size:16px", text:isRep(t) ? a.tRepel : a.tLure }), h("span", { class:"pill", style:"background:" + tCol(t) + ";color:" + tInk(t), text:a.pill })));
     const by = t.createdBy && t.createdBy === S.uid ? x.dYou : (S.nicks.get(t.createdBy) || S.names.get(t.createdBy) || x.dSomeone);
     const dl = h("dl", {}, h("dt", { text:x.dAdded }), h("dd", { text:dateL(t.createdAt) }), h("dt", { text:x.dBy }), h("dd", { text:by }));
     if (t.note) dl.append(h("dt", { text:a.note.replace(/ \(.*\)/, "") }), h("dd", { text:t.note }));
@@ -519,7 +524,7 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
   // ================= Canvas map =================
   const cv = $("#map"), ctx = cv.getContext("2d");
   let C = {}, dpr = 1, W = 0, H = 0, raf = 0;
-  function readColors() { const cs = getComputedStyle(document.documentElement); for (const k of ["land","park","wood","park-edge","walk","pitch","play","water","road","road-case","road-major","road-major-case","label","halo","infested","risk","felled","treated","trap","bld","bld-edge","green","bark","surface","ink"]) C[k] = cs.getPropertyValue("--" + k).trim(); }
+  function readColors() { const cs = getComputedStyle(document.documentElement); for (const k of ["land","park","wood","park-edge","walk","pitch","play","water","road","road-case","road-major","road-major-case","label","halo","infested","risk","felled","repel","treated","trap","bld","bld-edge","green","bark","surface","ink"]) C[k] = cs.getPropertyValue("--" + k).trim(); }
   function resize() { dpr = Math.min(2.5, window.devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); draw(); }
   const toScreen = (x, y) => { const v = S.view, c = Math.cos(v.rot), sn = Math.sin(v.rot), ux = (x - v.cx) * v.s, uy = (y - v.cy) * v.s; return [W / 2 + ux * c - uy * sn, H / 2 + ux * sn + uy * c]; };
   const toWorld = (sx, sy) => { const v = S.view, c = Math.cos(v.rot), sn = Math.sin(v.rot), dx = sx - W / 2, dy = sy - H / 2; return [(dx * c + dy * sn) / v.s + v.cx, (-dx * sn + dy * c) / v.s + v.cy]; };
@@ -594,12 +599,12 @@ const MAPDATA = {"roads":{"trunk":[[-1540,7014,-221,-546,-24,-103,-10,-78,-1,-11
       const [x, y] = toScreen(wx(t.lng), wy(t.lat)); if (x < -20 || y < -20 || x > W + 20 || y > H + 20) continue;
       if (S.selected === t.id) { ctx.beginPath(); ctx.arc(x, y, 15, 0, Math.PI * 2); ctx.strokeStyle = C.bark; ctx.lineWidth = 3; ctx.stroke(); }
       ctx.beginPath(); ctx.moveTo(x, y - 11); ctx.lineTo(x + 11, y); ctx.lineTo(x, y + 11); ctx.lineTo(x - 11, y); ctx.closePath();
-      ctx.fillStyle = C.trap; ctx.fill(); ctx.strokeStyle = "#5a4600"; ctx.lineWidth = 2; ctx.stroke();
-      ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fillStyle = "#5a4600"; ctx.fill();
+      const rp = isRep(t), dk = rp ? "#4a1f73" : "#5a4600"; ctx.fillStyle = rp ? C.repel : C.trap; ctx.fill(); ctx.strokeStyle = dk; ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fillStyle = dk; ctx.fill();
     }
     if (S.pickTrap && S.trapDraft && S.trapDraft.lat != null) { const [x, y] = toScreen(wx(S.trapDraft.lng), wy(S.trapDraft.lat));
       ctx.beginPath(); ctx.moveTo(x, y); ctx.bezierCurveTo(x - 12, y - 16, x - 11, y - 32, x, y - 32); ctx.bezierCurveTo(x + 11, y - 32, x + 12, y - 16, x, y);
-      ctx.fillStyle = C.trap; ctx.fill(); ctx.strokeStyle = "#5a4600"; ctx.lineWidth = 1.5; ctx.stroke(); ctx.beginPath(); ctx.arc(x, y - 21, 4, 0, Math.PI * 2); ctx.fillStyle = "#5a4600"; ctx.fill(); }
+      ctx.fillStyle = isRep(S.trapDraft) ? C.repel : C.trap; ctx.fill(); ctx.strokeStyle = "#5a4600"; ctx.lineWidth = 1.5; ctx.stroke(); ctx.beginPath(); ctx.arc(x, y - 21, 4, 0, Math.PI * 2); ctx.fillStyle = "#5a4600"; ctx.fill(); }
     if (S.me) { const [x, y] = toScreen(wx(S.me.lng), wy(S.me.lat)); ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fillStyle = "#2f7de1"; ctx.fill(); ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.stroke(); }
     if (S.draft && S.draft.lat != null) { const [x, y] = toScreen(wx(S.draft.lng), wy(S.draft.lat));
       ctx.beginPath(); ctx.moveTo(x, y); ctx.bezierCurveTo(x - 12, y - 16, x - 11, y - 32, x, y - 32); ctx.bezierCurveTo(x + 11, y - 32, x + 12, y - 16, x, y);
@@ -871,7 +876,8 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
       h("span", {}, h("i", { style:"background:var(--infested)" }), x.lgInf, h("b", { id:"count", style:"color:var(--infested)" })),
       h("span", {}, h("i", { style:"background:var(--risk)" }), x.lgRisk),
       h("span", {}, h("i", { style:"background:var(--felled)" }), x.lgFel),
-      h("span", {}, h("i", { style:"background:var(--trap);border-radius:2px;transform:rotate(45deg) scale(.85)" }), TT().lg));
+      h("span", {}, h("i", { style:"background:var(--trap);border-radius:2px;transform:rotate(45deg) scale(.85)" }), TT().tLure),
+      h("span", {}, h("i", { style:"background:var(--repel);border-radius:2px;transform:rotate(45deg) scale(.85)" }), TT().tRepel));
     $("#fab").replaceChildren(svgEl(ICON.scan), x.fab);
     $("#attrib").replaceChildren(h("b", { text:"i" }), h("span", { text:x.attrib })); $("#attrib").setAttribute("aria-label", x.attrib); $("#attrib").onclick = e => e.currentTarget.classList.toggle("open"); $("#pickCancel").textContent = x.cancel; $("#pickOk").textContent = x.save;
     const lab = { menuBtn:x.menu, zin:x.zin, zout:x.zout, northBtn:x.north, rotL:x.rotL, rotR:x.rotR, locBtn:x.loc };
@@ -1205,7 +1211,7 @@ verdict: infested — clear signs (usually 2+ or clear galleries); suspicious �
       h("h3", { text:A.howT }), h("ol", { class:"steps" }, ...A.how.map(s => h("li", {}, h("span", { text:s })))),
       h("h3", { text:A.signsT }), h("div", { class:"chips" }, ...A.signs.map(s => h("span", { text:s }))),
       h("div", { class:"team" }, h("p", { class:"tt" }, A.teamT, h("span", { class:"hl", text:"QuantumX" })), h("p", { text:A.team })),
-      h("h3", { text:A.colorsT }), h("div", { class:"colors" }, ...A.colors.map(([c, s]) => h("div", {}, h("i", { style:`background:var(--${c})` + (c === "trap" ? ";border-radius:2px;transform:rotate(45deg) scale(.85)" : "") }), h("span", { text:s })))),
+      h("h3", { text:A.colorsT }), h("div", { class:"colors" }, ...A.colors.map(([c, s]) => h("div", {}, h("i", { style:`background:var(--${c})` + (c === "trap" || c === "repel" ? ";border-radius:2px;transform:rotate(45deg) scale(.85)" : "") }), h("span", { text:s })))),
       h("h3", { text:A.foundT }), h("ul", {}, ...A.found.map(s => h("li", { text:s }))),
       h("p", { class:"muted", text:A.note }));
     body.append(wrap);
